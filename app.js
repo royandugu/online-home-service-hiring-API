@@ -1,9 +1,13 @@
+require("dotenv").config();
+
 const express=require("express");
 const app=express();
 
+//User-defined functions
+const dbConnector=require("./Connector/dbConnector");
 const start=async ()=>{
     try{
-        //Connect to the db
+        await dbConnector(process.env.MONGO_URI);
         app.listen(5000,()=>console.log("Api is listening to port 5000"));
     }
     catch(err){
