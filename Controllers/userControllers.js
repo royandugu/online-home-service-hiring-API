@@ -11,8 +11,6 @@ const phoneNumberValidation=async (req,res)=>{
     //send the OTP to user's device await
     const {userOtp}=req.body;
     if(userOtp===currentOtp){
-        const accessToken=jwt.sign({phoneNumber: phoneNumber},process.env.JWT_SECRET);
-        //A look at JOBS API to see where these access tokens are actually stored
     }
     queryObject.phoneNumber=phoneNumber;
 }
