@@ -8,4 +8,7 @@ const OtpSchema=new Mongoose.Schema({
     }
 },{timestamps:true})
 
+OtpSchema.methods.expireOtp=function(){
+    this.verified=false;
+}
 module.exports=Mongoose.model("Otp-model",OtpSchema);

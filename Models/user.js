@@ -1,9 +1,18 @@
+require("dotenv").config();
+
 const Mongoose=require("mongoose");
-const Schema=new Mongoose.Schema({
+const {sign}=require("jsonwebtoken");
+
+const UserSchema=new Mongoose.Schema({
+    phoneNumber:{
+        type:Number,
+        required:[true, "Please provide your phone number"],
+        match:[/^[0-9]{10}$/]
+    },
     firstName:{
         type:String,
         required:[true, "Please provide your first name"],
-        match:[/^[A-Z][a-z]{2,}$/,"Please provide a valaddid first name"]
+        match:[/^[A-Z][a-z]{2,}$/,"Please provide a valid first name"]
     },
     lastName:{
         type:String,
@@ -17,13 +26,12 @@ const Schema=new Mongoose.Schema({
     },
     password:{
         type:String,
-        match:[/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/,"Please provide a valid password"]
-    },
-    phoneNumber:{
-        type:Number,
-        required:[true, "Please provide your phone number"],
-        match:[/^[0-9]{10}$/]
+        match:[/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/,"Please provide a valid password"],
+        required:[true,"Please enter your password"]
     }
 })
 
+UserSchema.methods.generateToken=function(){
+    return sign({phoneNumber: this.phoneNumber, name: this.name},process.env.JWT_SECRET);
+}
 module.exports=Mongoose.model("Phone-Number-Model",Schema);
