@@ -8,70 +8,39 @@ const {StatusCodes}=require("http-status-codes");
 const BadRequestError = require("../Error_Handlers/badRequestError");
 const AuthenticationError = require("../Error_Handlers/authenticationError");
 const UserModel=require("../Models/user");
-
-const queryObject={};
-
-//Sync 
-const otpIsValid=(userEnteredOtp,actualOtp)=>{
-    if(userEnteredOtp===actualOtp) return true;
-    else return false;
-}
+const OtpModel=require("../Models/otp");
 
 //That goes in route
 const sendPhoneOtp=async (req,res)=>{
     const {phoneNumber} = req.body;
-    if(!phoneNumber || phoneNumber.length!=10) throw new BadRequestError("The phone number does not match with the expected format");
+    if(!phoneNumber || phoneNumber.length!==10) throw new BadRequestError("The phone number does not match with the expected format");
     const phoneOtp=otpGenerator.generate(6);
-    
-    //send the OTP to user's device await
-    queryObject.phoneNumber=phoneNumber;
-    queryObject.phoneOtp=phoneOtp;
-    //response
-    res.status(StatusCodes.OK).json({message:"OTP sent successfully"});
+    //Send OTP sms in the phone number, try catch
+    await OtpModel.create({otp:phoneOtp,phoneNumber:phoneNumber});
+    res.status(StatusCodes.OK).json({message:"OTP sent successfully",phoneNumber:phoneNumber});
 }
 
 //Two validators
 const validatePhoneOtp=async (req,res)=>{
-    const {userOtp}=req.body;
-    if(otpIsValid(userOtp,queryObject.phoneOtp)) return res.status(StatusCodes.OK).json({message:"Phone OTP is valid"});
-    else {
-        delete queryObject.phoneNumber;
-        delete queryObject.phoneOtp;
-        throw new AuthenticationError("The provided phone OTP doesnot match with the one given to you");
-    }
-}
-const validateEmailOtp=async (req,res)=>{
-    const {userOtp}=req.body;
-    if(otpIsValid(userOtp,queryObject.emailOtp)) {
-        UserModel.create({...queryObject});
-        return res.status(StatusCodes.OK).json({message:"Email OTP is valid"})
-    }
-    else {
-        delete queryObject.email;
-        delete queryObject.emailOtp;
-        throw new AuthenticationError("The provided email OTP doesnot match with the one given to you");
-    }
+    const {userOtp,phoneNumber}=req.body;
+    if(!userOtp || userOtp.length!==10) throw new BadRequestError("Invalid OTP format detected");
+    const actualOtp=await OtpModel.findOne({phoneNumber:phoneNumber});
+    const isValid=actualOtp.isValid();
+    if(!isValid) return new AuthenticationError("The OTP provided has already been expired");
+    if(userOtp===actualOtp) return res.status(StatusCodes.OK).json({message:"Otp validated"});
+    else throw new AuthenticationError("The provided OTP doesnot match with the one assigned to you");
 }
 
 //Register
 const register=async (req,res)=>{
-    //or user can just directly login using gmail API
-    const {firstName,lastName,email}=req.body;
-    
-    queryObject.firstName=firstName;
-    queryObject.lastName=lastName;
-    
     if(!email) {
-        UserModel.create({...queryObject});
-        //Access token generation
-        res.status(StatusCodes.OK).json({message:`user ${firstName} ${lastName} created`, accessToken:""})
+        const result=await UserModel.create({...req.body});
+        res.status(StatusCodes.CREATED).json({user:result,message:"User created"});        
     }
     else{
-        const emailOtp=otpGenerator.generate(6);
-        queryObject.emailOtp=emailOtp;
-        //Mail the otp to the user
+        //send the email message to the user
+        res.status(StatusCodes.OK).json({message:"Email message sent"});
     }
-    res.status(StatusCodes.OK).json({message:"Email OTP has been sent"});
 }
 
 //Login

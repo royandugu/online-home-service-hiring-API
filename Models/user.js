@@ -32,6 +32,6 @@ const UserSchema=new Mongoose.Schema({
 })
 
 UserSchema.methods.generateToken=function(){
-    return sign({phoneNumber: this.phoneNumber, name: this.name},process.env.JWT_SECRET);
+    return sign({phoneNumber: this.phoneNumber},process.env.JWT_SECRET);
 }
-module.exports=Mongoose.model("Phone-Number-Model",Schema);
+module.exports=Mongoose.model("User-Model",Schema);
