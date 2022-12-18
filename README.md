@@ -1,3 +1,9 @@
+## For front end
+1. `/api/V1/sendOtp` <- POST request to sms the OTP to user's number
+2. `/api/V1/validateOtp` <- POST request to validate the user entered OTP
+3. `/api/V1/register` <- POST request to register a new user 
+4. `/api/V1/login` <- POST request to login an existing user
+
 ## Note <Registration>
 1. Firstly the phone number is validated through OTP
 2. Then the name and email is entered by the user along with the password

@@ -15,7 +15,10 @@ const sendPhoneOtp=async (req,res)=>{
     const {phoneNumber} = req.body;
     if(!phoneNumber || phoneNumber.length!==10) throw new BadRequestError("The phone number does not match with the expected format");
     const phoneOtp=otpGenerator.generate(6);
+    
     //Send OTP sms in the phone number, try catch
+    const apiToken="Bearer "+process.env.API_TOKEN;
+    
     await OtpModel.create({otp:phoneOtp,phoneNumber:phoneNumber});
     res.status(StatusCodes.OK).json({message:"OTP sent successfully",phoneNumber:phoneNumber});
 }
@@ -47,4 +50,4 @@ const register=async (req,res)=>{
 const login=async (req,res)=>{
 
 }
-module.exports={sendPhoneOtp,validatePhoneOtp,validateEmailOtp,register,login};
+module.exports={sendPhoneOtp,validatePhoneOtp,register,login};

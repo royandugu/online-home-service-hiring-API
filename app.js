@@ -3,8 +3,12 @@ require("dotenv").config();
 const express=require("express");
 const app=express();
 
+//our dependencies
+const userRoutes=require("./Routes/userRoutes");
+
 //middlewares
 app.use(express.json());
+app.use("/api/V1/users",userRoutes);
 
 //User-defined functions
 const dbConnector=require("./Connector/dbConnector");
