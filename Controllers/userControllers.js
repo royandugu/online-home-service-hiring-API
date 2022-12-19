@@ -1,3 +1,6 @@
+//primary dependencies
+const axios=require("axios");
+
 //Other dependencies
 require("dotenv").config();
 const otpGenerator=require("otp-generator");
@@ -16,11 +19,29 @@ const sendPhoneOtp=async (req,res)=>{
     if(!phoneNumber || phoneNumber.length!==10) throw new BadRequestError("The phone number does not match with the expected format");
     const phoneOtp=otpGenerator.generate(6);
     
-    //Send OTP sms in the phone number, try catch
+    //initial request setup
     const apiToken="Bearer "+process.env.API_TOKEN;
-    
-    await OtpModel.create({otp:phoneOtp,phoneNumber:phoneNumber});
-    res.status(StatusCodes.OK).json({message:"OTP sent successfully",phoneNumber:phoneNumber});
+    const config = {
+        headers:{
+            "Authorization":apiToken,
+            "Content-Type":"application/json",
+            "Accept":"application/json"
+        }
+    };
+    const endPointUrl=process.env.SOCI_URL;
+
+    //body setup
+    const data ={
+        "message": `${phoneOtp} is your Gharmai-register verification code`,
+        "mobile": phoneNumber
+    }
+
+    //Axios request
+    axios.post(endPointUrl, data, config).then(res=> {
+        await OtpModel.create({otp:phoneOtp,phoneNumber:phoneNumber});
+        res.status(StatusCodes.OK).json({message:"OTP sent successfully",phoneNumber:phoneNumber});
+    }).catch(err=> console.log(err)) 
+
 }
 
 //Two validators
