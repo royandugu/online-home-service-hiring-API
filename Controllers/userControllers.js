@@ -11,7 +11,7 @@ const {StatusCodes}=require("http-status-codes");
 const BadRequestError = require("../Error_Handlers/badRequestError");
 const AuthenticationError = require("../Error_Handlers/authenticationError");
 const UserModel=require("../Models/user");
-const OtpModel=require("../Models/otp");
+const OtpModel=require("../Models/phoneOtp");
 
 //That goes in route
 const sendPhoneOtp=async (req,res)=>{
@@ -40,26 +40,35 @@ const sendPhoneOtp=async (req,res)=>{
     axios.post(endPointUrl, data, config).then(res=> {
         await OtpModel.create({otp:phoneOtp,phoneNumber:phoneNumber});
         res.status(StatusCodes.OK).json({message:"OTP sent successfully",phoneNumber:phoneNumber});
-    }).catch(err=> console.log(err)) 
-
+    }).catch(err=>res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({message:err})) 
 }
 
 //Two validators
 const validatePhoneOtp=async (req,res)=>{
     const {userOtp,phoneNumber}=req.body;
-    if(!userOtp || userOtp.length!==10) throw new BadRequestError("Invalid OTP format detected");
+
+    if(!userOtp) throw new BadRequestError("The OTP is not present");
+    if(userOtp.length!=6) throw new BadRequestError("Invalid OTP format");
+    if(!phoneNumber) throw new BadRequestError("Phone number not avaliable");
+    if(phoneNumber.length!=10) throw new BadRequestError("Invalid phone number");
+
     const actualOtp=await OtpModel.findOne({phoneNumber:phoneNumber});
     const isValid=actualOtp.isValid();
-    if(!isValid) return new AuthenticationError("The OTP provided has already been expired");
-    if(userOtp===actualOtp) return res.status(StatusCodes.OK).json({message:"Otp validated"});
+    
+    if(!isValid) throw new AuthenticationError("The OTP provided has already expired");
+
+    if(userOtp===actualOtp) return res.status(StatusCodes.OK).json({message:"Otp validated",phoneNumber:phoneNumber});
     else throw new AuthenticationError("The provided OTP doesnot match with the one assigned to you");
 }
 
 //Register
 const register=async (req,res)=>{
+    const {firstName,lastName,email,password}=req.body;
+    if(!firstName || !lastName || !password) throw new BadRequestError("First name or the last name or the password is not avaliable");
+    
     if(!email) {
         const result=await UserModel.create({...req.body});
-        res.status(StatusCodes.CREATED).json({user:result,message:"User created"});        
+        return res.status(StatusCodes.CREATED).json({user:result,message:"User created"});        
     }
     else{
         //send the email message to the user
