@@ -15,8 +15,7 @@ const OtpModel=require("../Models/phoneOtp");
 
 //That goes in route
 const sendPhoneOtp=async (req,res)=>{
-    const {phoneNumber} = req.body;
-    if(!phoneNumber || phoneNumber.length!==10) throw new BadRequestError("The phone number does not match with the expected format");
+    const {phoneNumber} = req.body;//inputted data invalid, check SOCIAIR API to send phoneNumber as a string or a number
     const phoneOtp=otpGenerator.generate(6);
     
     //initial request setup
@@ -35,9 +34,9 @@ const sendPhoneOtp=async (req,res)=>{
         "message": `${phoneOtp} is your Gharmai-register verification code`,
         "mobile": phoneNumber
     }
-
+    console.log(phoneOtp);
     //Axios request
-    axios.post(endPointUrl, data, config).then(res=> {
+    axios.post(endPointUrl, data, config).then(async res=> {
         await OtpModel.create({otp:phoneOtp,phoneNumber:phoneNumber});
         res.status(StatusCodes.OK).json({message:"OTP sent successfully",phoneNumber:phoneNumber});
     }).catch(err=>res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({message:err})) 
