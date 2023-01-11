@@ -1,11 +1,9 @@
-//primary dependencies
-const axios=require("axios");
-
 //Other dependencies
 require("dotenv").config();
 const otpGenerator=require("otp-generator");
 const jwt=require("jsonwebtoken");
 const {StatusCodes}=require("http-status-codes");
+const request=require("request");
 
 //User defined
 const BadRequestError = require("../Error_Handlers/badRequestError");
@@ -20,26 +18,33 @@ const sendPhoneOtp=async (req,res)=>{
     
     //initial request setup
     const apiToken="Bearer "+process.env.API_TOKEN;
-    const config = {
-        headers:{
-            "Authorization":apiToken,
-            "Content-Type":"application/json",
-            "Accept":"application/json"
-        }
-    };
     const endPointUrl=process.env.SOCI_URL;
-
+    
     //body setup
     const data ={
         "message": `${phoneOtp} is your Gharmai-register verification code`,
         "mobile": phoneNumber
     }
-    console.log(phoneOtp);
+
+    request({
+        url: endPointUrl,
+        method: "POST",
+        headers:{
+            "Authorization":apiToken,
+            "Content-Type":"application/json",
+            "Accept":"application/json"
+        },
+        json: true,   // <--Very important!!!
+        body: data
+    }, async (error, response, body)=>{
+        res.status(StatusCodes.OK).json({response:response,body:body});
+    });
+
     //Axios request
-    axios.post(endPointUrl, data, config).then(async res=> {
-        await OtpModel.create({otp:phoneOtp,phoneNumber:phoneNumber});
-        res.status(StatusCodes.OK).json({message:"OTP sent successfully",phoneNumber:phoneNumber});
-    }).catch(err=>res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({message:err})) 
+    //  axios.post(endPointUrl, data, config).then(res=> {
+    //      console.log(res);
+    //      res.status(StatusCodes.OK).json({message:"OTP sent successfully",phoneNumber:phoneNumber});
+    //  }).catch(err=>res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({message:err.res})) 
 }
 
 //Two validators
