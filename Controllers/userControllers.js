@@ -3,7 +3,7 @@ require("dotenv").config();
 const otpGenerator=require("otp-generator");
 const jwt=require("jsonwebtoken");
 const {StatusCodes}=require("http-status-codes");
-const request=require("request");
+const https=require("https");
 
 //User defined
 const BadRequestError = require("../Error_Handlers/badRequestError");
@@ -21,24 +21,52 @@ const sendPhoneOtp=async (req,res)=>{
     const endPointUrl=process.env.SOCI_URL;
     
     //body setup
-    const data ={
+    const data =JSON.stringify({
         "message": `${phoneOtp} is your Gharmai-register verification code`,
         "mobile": phoneNumber
-    }
+    })
 
-    request({
-        url: endPointUrl,
-        method: "POST",
-        headers:{
+    const options = {
+        hostname: 'localhost',
+        path: endPointUrl,
+        method: 'POST',
+        headers: {
             "Authorization":apiToken,
             "Content-Type":"application/json",
             "Accept":"application/json"
-        },
-        json: true,   // <--Very important!!!
-        body: data
-    }, async (error, response, body)=>{
-        res.status(StatusCodes.OK).json({response:response,body:body});
-    });
+        }
+    }
+
+    const reqw = https.request(options, resw => {
+        let data = '';
+        console.log('Status Code:', resw.statusCode);
+        resw.on('data', chunk => {
+            data += chunk
+        })
+        resw.on('end', () => {
+            console.log('Body: ', JSON.parse(data));
+            res.status(resw.statusCode).json({body:JSON.parse(data)});
+        })
+    }).on('error', err => {
+    console.log('Error: ', err.message)
+  })
+
+    reqw.write(data)
+    reqw.end()
+
+    // request({
+    //     url: endPointUrl,
+    //     method: "POST",
+    //     headers:{
+    //         "Authorization":apiToken,
+    //         "Content-Type":"application/json",
+    //         "Accept":"application/json"
+    //     },
+    //     json: true,   // <--Very important!!!
+    //     body: data
+    // }, async (error, response, body)=>{
+    //     res.status(StatusCodes.OK).json({response:response,body:body});
+    // });
 
     //Axios request
     //  axios.post(endPointUrl, data, config).then(res=> {
