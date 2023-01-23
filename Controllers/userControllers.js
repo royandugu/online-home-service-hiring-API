@@ -11,7 +11,7 @@ const AuthenticationError = require("../Error_Handlers/authenticationError");
 const UserModel=require("../Models/user");
 const OtpModel=require("../Models/phoneOtp");
 
-//That goes in route
+
 const sendPhoneOtp=async (req,res)=>{
     const {phoneNumber} = req.body;
     const phoneOtp=otpGenerator.generate(6);
@@ -40,13 +40,20 @@ const sendPhoneOtp=async (req,res)=>{
     const reqw=http.request(options,(resw)=>{
         let data="";
         resw.on('data',(chunk)=>data+=chunk);
-        resw.on('end',()=>{
-                res.status(StatusCodes.OK).json({message:JSON.parse(data)})
+        resw.on('end',async ()=>{
+                const jsonMessage=JSON.parse(data);
+                if(jsonMessage.message==="Success! SMS has been sent"){
+                    await OtpModel.create({otp: phoneOtp, phoneNumber: phoneNumber, verified: true});
+                    return res.status(StatusCodes.OK).json({message:jsonMessage});
+                }
+                else if(jsonMessage.message==="Unauthenticated") return res.status(StatusCodes.UNAUTHORIZED).json({message:jsonMessage.message});
+                else if(jsonMessage.message==="Sorry! SMS could not be sent. Invalid mobile number") return res.status(StatusCodes.BAD_REQUEST).json({message:jsonMessage.message});
+                else{
+                    return res.status(StatusCodes.NOT_FOUND).json({message:json.message});
+                }
             }
         )
-        resw.on('error',(error)=>{
-            throw new BadRequestError(error.message);
-        })
+        resw.on('error',(error)=>res.status(StatusCodes.NOT_FOUND).json({message:error.message}))
     })
     
     //passing our data
