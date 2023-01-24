@@ -21,6 +21,8 @@ is present. If the OTP is invalid then AuthenticationError is thrown by the API.
 then user is moved to the register section. Here user enters their firstName, lastName, password and email(optional). If user doesnot enter their email then their account is created. Somehow if user enters the 
 email and it matches the format, then API emails them another OTP and user is redirected to OTP entering page. Here the user has to enter the OTP mailed to their entered email. If it is correct then their account is created.  
 
-## Todo
-1. Add the controllers to the routes and then console the OTP. Check if the OTP validation works
-2. Test 1:- Check SOCIAIR API data format for phone number. Plus check axios
+## Tests performed
+1. Test-1 : OTP sent to the phone as sms. throw new garda API crash hunxa check those. Further other conditions need to be checked 
+2. Test-2 : OTP validation checked. throw maii problem. 
+
+NOTE: Fix the throw thingy. Then test all possibilities in sendOtp and validateOtp

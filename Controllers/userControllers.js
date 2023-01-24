@@ -65,17 +65,19 @@ const sendPhoneOtp=async (req,res)=>{
 const validatePhoneOtp=async (req,res)=>{
     const {userOtp,phoneNumber}=req.body;
 
+
     if(!userOtp) throw new BadRequestError("The OTP is not present");
     if(userOtp.length!=6) throw new BadRequestError("Invalid OTP format");
     if(!phoneNumber) throw new BadRequestError("Phone number not avaliable");
     if(phoneNumber.length!=10) throw new BadRequestError("Invalid phone number");
 
+    
     const actualOtp=await OtpModel.findOne({phoneNumber:phoneNumber});
     const isValid=actualOtp.isValid();
     
     if(!isValid) throw new AuthenticationError("The OTP provided has already expired");
 
-    if(userOtp===actualOtp) return res.status(StatusCodes.OK).json({message:"Otp validated",phoneNumber:phoneNumber});
+    if(userOtp===actualOtp.otp) return res.status(StatusCodes.OK).json({message:"Otp validated",phoneNumber:phoneNumber});
     else throw new AuthenticationError("The provided OTP doesnot match with the one assigned to you");
 }
 
