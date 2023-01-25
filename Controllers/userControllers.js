@@ -46,14 +46,18 @@ const sendPhoneOtp=async (req,res)=>{
                     await OtpModel.create({otp: phoneOtp, phoneNumber: phoneNumber, verified: true});
                     return res.status(StatusCodes.OK).json({message:jsonMessage});
                 }
-                else if(jsonMessage.message==="Unauthenticated") return res.status(StatusCodes.UNAUTHORIZED).json({message:jsonMessage.message});
-                else if(jsonMessage.message==="Sorry! SMS could not be sent. Invalid mobile number") return res.status(StatusCodes.BAD_REQUEST).json({message:jsonMessage.message});
+                else if(jsonMessage.message==="Unauthenticated") {
+                    throw new AuthenticationError(jsonMessage.message);
+                }
+                else if(jsonMessage.message==="Sorry! SMS could not be sent. Invalid mobile number") {
+                    throw new BadRequestError(jsonMessage.message);
+                }
                 else{
-                    return res.status(StatusCodes.NOT_FOUND).json({message:json.message});
+                    return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({message:"Unknown error encountered. No response from Soci AIR API"});
                 }
             }
         )
-        resw.on('error',(error)=>res.status(StatusCodes.NOT_FOUND).json({message:error.message}))
+        resw.on('error',(error)=>res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({message:error.message}))
     })
     
     //passing our data

@@ -25,4 +25,6 @@ email and it matches the format, then API emails them another OTP and user is re
 1. Test-1 : OTP sent to the phone as sms. throw new garda API crash hunxa check those. Further other conditions need to be checked 
 2. Test-2 : OTP validation checked. throw maii problem. 
 
+## Throw doesn't work in http, switch to Fetch ??
+
 NOTE: Fix the throw thingy. Then test all possibilities in sendOtp and validateOtp
