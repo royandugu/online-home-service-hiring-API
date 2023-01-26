@@ -16,53 +16,46 @@ const sendPhoneOtp=async (req,res)=>{
     const {phoneNumber} = req.body;
     const phoneOtp=otpGenerator.generate(6);
     
+    if(!phoneNumber) throw new BadRequestError("Missing phone number");
+    else if(phoneNumber.length!= 10) throw new BadRequestError("Invalid phone number provided");
+
+    const information=await OtpModel.find({phoneNumber: phoneNumber});
+    
     //Token
     const apiToken="Bearer "+process.env.API_TOKEN;
-    //body setup
-    const data =JSON.stringify({
-        "message": `${phoneOtp} is your Gharmai-register verification code`,
-        "mobile": phoneNumber
-    })
-
+    
     //options setup
     const options = {
-        hostname: 'sms.sociair.com',
-        path: '/api/sms',
         method: 'POST',
         headers: {
             "Authorization":apiToken,
             "Content-Type":"application/json",
             "Accept":"application/json"
-        }
+        },
+        body:JSON.stringify({
+            "message": `${phoneOtp} is your Gharmai-register verification code`,
+            "mobile": phoneNumber
+        })
     }
 
     //Senting the request to sociair API
-    const reqw=http.request(options,(resw)=>{
-        let data="";
-        resw.on('data',(chunk)=>data+=chunk);
-        resw.on('end',async ()=>{
-                const jsonMessage=JSON.parse(data);
-                if(jsonMessage.message==="Success! SMS has been sent"){
-                    await OtpModel.create({otp: phoneOtp, phoneNumber: phoneNumber, verified: true});
-                    return res.status(StatusCodes.OK).json({message:jsonMessage});
-                }
-                else if(jsonMessage.message==="Unauthenticated") {
-                    throw new AuthenticationError(jsonMessage.message);
-                }
-                else if(jsonMessage.message==="Sorry! SMS could not be sent. Invalid mobile number") {
-                    throw new BadRequestError(jsonMessage.message);
-                }
-                else{
-                    return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({message:"Unknown error encountered. No response from Soci AIR API"});
-                }
-            }
-        )
-        resw.on('error',(error)=>res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({message:error.message}))
-    })
+    const sociFetcher=async()=>{
+        const data=await fetch(process.env.SOCI_URL,options);
+        const response=await data.json();
+        return response;
+    }
     
-    //passing our data
-    reqw.write(data);
-    reqw.end();
+    const response=await sociFetcher();
+    if(response.message === "Sorry! SMS could not be sent. Invalid mobile number") return res.status(StatusCodes.BAD_REQUEST).json({message:response.message});
+    else if(response.message ==="Unauthenticated") return res.status(StatusCodes.UNAUTHORIZED).json({message:response.message});
+    else if(response.message ==="Success! SMS has been sent") {
+        if(information.length===0) await OtpModel.create({otp:phoneOtp , phoneNumber:phoneNumber});
+        else{
+            await OtpModel.findOneAndUpdate({phoneNumber:phoneNumber},{otp:phoneOtp},{new:true,runValidators:true});
+        }
+        return res.status(StatusCodes.OK).json({message:response.message});
+    }
+    else return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({message: "Unknown error occured while posting data to SOCI AIR API"}) 
 }
 
 //Two validators
