@@ -26,7 +26,7 @@ email and it matches the format, then API emails them another OTP and user is re
 If the client is a mobile application, where will the generated token go?
 
 ## Next-commit
-
-Plan the verify using session
+1. Test the session putting style in sendOtp controller
+2. Plan the verify using session
 
 NOTE: Fix the throw thingy. Then test all possibilities in sendOtp and validateOtp
