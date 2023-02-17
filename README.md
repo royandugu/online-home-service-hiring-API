@@ -21,5 +21,12 @@ is present. If the OTP is invalid then AuthenticationError is thrown by the API.
 then user is moved to the register section. Here user enters their firstName, lastName, password and email(optional). If user doesnot enter their email then their account is created. Somehow if user enters the 
 email and it matches the format, then API emails them another OTP and user is redirected to OTP entering page. Here the user has to enter the OTP mailed to their entered email. If it is correct then their account is created.  
 
+## Token plan
+
+If the client is a mobile application, where will the generated token go?
+
+## Next-commit
+
+Plan the verify using session
 
 NOTE: Fix the throw thingy. Then test all possibilities in sendOtp and validateOtp
