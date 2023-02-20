@@ -3,7 +3,6 @@ require("dotenv").config();
 
 const express=require("express");
 const app=express();
-const session=require("express-session");
 
 //our dependencies
 const userRoutes=require("./Routes/userRoutes");
@@ -11,11 +10,6 @@ const errorController=require("./Error_Handlers/errorController");
 
 //middlewares
 app.use(express.json());
-app.use(session({
-    secret:process.env.SESSION_SECRET,
-    saveUninitialized:true,
-    resave:false
-}))
 app.use("/api/V1/users",userRoutes);
 app.use(errorController);
 

@@ -1,9 +1,11 @@
 //Other dependencies
 require("dotenv").config();
+
 const otpGenerator=require("otp-generator");
 const jwt=require("jsonwebtoken");
+const nodemailer=require("nodemailer");
+
 const {StatusCodes}=require("http-status-codes");
-const http=require("https");
 
 //User defined
 const BadRequestError = require("../Error_Handlers/badRequestError");
@@ -18,6 +20,8 @@ const sendPhoneOtp=async (req,res)=>{
     if(!phoneNumber) throw new BadRequestError("Missing phone number");
     else if(phoneNumber.length!= 10) throw new BadRequestError("Invalid phone number provided");
 
+    const information=await OtpModel.find({phoneNumber: phoneNumber});
+    
     const phoneOtp=otpGenerator.generate(6);
     
     //Token
@@ -48,9 +52,11 @@ const sendPhoneOtp=async (req,res)=>{
     if(response.message === "Sorry! SMS could not be sent. Invalid mobile number") return res.status(StatusCodes.BAD_REQUEST).json({message:response.message});
     else if(response.message ==="Unauthenticated") return res.status(StatusCodes.UNAUTHORIZED).json({message:response.message});
     else if(response.message ==="Success! SMS has been sent") {
-        req.session.phoneNumber=phoneNumber;
-        req.session.phoneOtp=phoneOtp;
-        return res.status(StatusCodes.OK).json({message:response.message,phoneNumber:phoneNumber});
+        if(information.length===0) await OtpModel.create({otp:phoneOtp , phoneNumber:phoneNumber});
+        else{
+            await OtpModel.findOneAndUpdate({phoneNumber:phoneNumber},{otp:phoneOtp},{new:true,runValidators:true});
+        }
+        res.status(StatusCodes.OK).json({message:response.message,phoneNumber:phoneNumber})
     }
     else return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({message: "Unknown error occured while posting data to SOCI AIR API"}) 
 }
@@ -87,7 +93,23 @@ const register=async (req,res)=>{
         return res.status(StatusCodes.CREATED).json({user:result,message:"User created"});        
     }
     else{
-        //send the email message to the user
+        const transporter = nodemailer.createTransport({
+            host: "smtp.gmail.com",
+            port: 587,
+            auth: {
+                user: process.env.APP_EMAIL,
+                pass: process.env.APP_PASSWORD
+            },
+        });
+    
+        const info = await transporter.sendMail({
+            from: '"Event Right 👻" <eventRight@example.com>', 
+            to: email, 
+            subject: "Email Validation ✔",
+            text: "Please click the login button to validate that the email is yours", 
+            html: "<button> Login </button>",  
+        });
+        
         res.status(StatusCodes.OK).json({message:"Email message sent"});
     }
 }
