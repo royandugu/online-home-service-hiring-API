@@ -10,7 +10,7 @@ const {StatusCodes}=require("http-status-codes");
 //User defined
 const BadRequestError = require("../Error_Handlers/badRequestError");
 const AuthenticationError = require("../Error_Handlers/authenticationError");
-const UserModel=require("../Models/user");
+const UserModel=require("../Models/userModel");
 const OtpModel=require("../Models/phoneOtp");
 
 
@@ -93,6 +93,7 @@ const register=async (req,res)=>{
         return res.status(StatusCodes.CREATED).json({user:result,message:"User created"});        
     }
     else{
+        const emailOtp=otpGenerator.generate(6);
         const transporter = nodemailer.createTransport({
             host: "smtp.gmail.com",
             port: 587,
@@ -106,10 +107,12 @@ const register=async (req,res)=>{
             from: '"Event Right 👻" <eventRight@example.com>', 
             to: email, 
             subject: "Email Validation ✔",
-            text: "Please click the login button to validate that the email is yours", 
-            html: "<button> Login </button>",  
+            text: "The following is your email validation code", 
+            html: `<h5> ${emailOtp} </h5>`,  
         });
-        
+
+        console.log(info);
+        //if info says valid put it in our email otp
         res.status(StatusCodes.OK).json({message:"Email message sent"});
     }
 }
