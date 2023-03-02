@@ -118,7 +118,24 @@ const register=async (req,res)=>{
 }
 
 //Login
-const login=async (req,res)=>{
 
-}
+const login=async (req,res)=> {
+    const { phoneNumber, password } = req.body;
+  
+    try {
+      // Find user in database
+      const user = await UserModel.findOne({ phoneNumber, password });
+  
+      if (!user) {
+        return res.status(401).json({ message: 'Invalid credentials' });
+      }
+  
+      // Return user data
+      return res.json(user);
+    } catch (error) {
+      console.error(error);
+      return res.status(500).json({ message: 'Server error' });
+    }
+  };
+
 module.exports={sendPhoneOtp,validatePhoneOtp,register,login};
