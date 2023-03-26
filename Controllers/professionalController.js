@@ -10,9 +10,8 @@ const {StatusCodes}=require("http-status-codes");
 //User defined
 const BadRequestError = require("../Error_Handlers/badRequestError");
 const AuthenticationError = require("../Error_Handlers/authenticationError");
-const UserModel=require("../Models/userModel");
+const professionalModel=require("../Models/professionalModel");
 const OtpModel=require("../Models/phoneOtp");
-
 
 const sendPhoneOtp=async (req,res)=>{
     const {phoneNumber} = req.body;
@@ -66,7 +65,7 @@ const validatePhoneOtp=async (req,res)=>{
     const {userOtp,phoneNumber}=req.body;
 
     if(!userOtp) throw new BadRequestError("The OTP is not present");
-    if(userOtp.length!=6) throw new BadRequestError("Invalid OTP format");
+    if(userOtp.length!=6) throw new BadRequestsError("Invalid OTP format");
     if(!phoneNumber) throw new BadRequestError("Phone number not avaliable");
     if(phoneNumber.length!=10) throw new BadRequestError("Invalid phone number");
 
@@ -85,11 +84,11 @@ const validatePhoneOtp=async (req,res)=>{
 
 //Register
 const register=async (req,res)=>{
-    const {firstName,lastName,email,password}=req.body;
+    const {firstName,lastName,email,password,profession}=req.body;
     if(!firstName || !lastName || !password) throw new BadRequestError("First name or the last name or the password is not avaliable");
     
     if(!email) {
-        const result=await UserModel.create({...req.body});
+        const result=await professionalModel.create({...req.body});
         return res.status(StatusCodes.CREATED).json({user:result,message:"User created"});        
     }
     else{
@@ -125,7 +124,7 @@ const login=async (req,res)=> {
   
     try {
       // Find user in database
-      const user = await UserModel.findOne({ phoneNumber, password });
+      const user = await professionalModel.findOne({ phoneNumber, password });
   
       if (!user) {
         return res.status(401).json({ message: 'Invalid credentials' });
@@ -138,7 +137,31 @@ const login=async (req,res)=> {
       return res.status(500).json({ message: 'Server error' });
     }
   };
+//getAll Professioanl By profession
+  const getProfessional=async (req,res)=> {
+    const professional = req.params.getProfessional
+   
+    try {
+      // Find user in database
+      const professional1 =await professionalModel.findOne({ profession: professional }, '_id').exec();
+      
+  
+      if (!professional1) {
+        return res.status(401).json({ message: 'Invalid credentials' });
+      }
+  
+      // Return user data
+      return res.json(professional1);
+    } catch (error) {
+      console.error(error);
+      return res.status(500).json({ message: 'Server error' });
+    }
+  };
 
-module.exports={sendPhoneOtp,validatePhoneOtp,register,login};
+  
+
+
+module.exports={sendPhoneOtp,validatePhoneOtp,register,login, getProfessional};
 
 //find
+
