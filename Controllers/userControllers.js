@@ -2,8 +2,8 @@
 require("dotenv").config();
 
 const otpGenerator=require("otp-generator");
-const jwt=require("jsonwebtoken");
 const nodemailer=require("nodemailer");
+const bcrypt=require("bcryptjs");
 
 const {StatusCodes}=require("http-status-codes");
 
@@ -85,9 +85,19 @@ const validatePhoneOtp=async (req,res)=>{
 
 //Register
 const register=async (req,res)=>{
-    const {firstName,lastName,email,password}=req.body;
-    if(!firstName || !lastName || !password) throw new BadRequestError("First name or the last name or the password is not avaliable");
-    
+    const {firstName,lastName,email,password,phoneNumber}=req.body;
+
+    if(!firstName) throw new BadRequestError("First name is not present");
+    if(!lastName) throw new BadRequestError("Last name is not present");
+    if(!password) throw new BadRequestError("Password is not present");
+    if(!phoneNumber) throw new BadRequestError("Phone number is not present");
+
+    //Password hashing
+    const salt=await bcrypt.genSalt(10);
+    const hashedPassword=await bcrypt.hash(password,salt); //this is the password that will be pushed
+
+    req.body.password=hashedPassword;
+
     if(!email) {
         const result=await UserModel.create({...req.body});
         return res.status(StatusCodes.CREATED).json({user:result,message:"User created"});        
@@ -111,7 +121,6 @@ const register=async (req,res)=>{
             html: `<h5> ${emailOtp} </h5>`,  
         });
 
-        console.log(info);
         //if info says valid put it in our email otp
         res.status(StatusCodes.OK).json({message:"Email message sent"});
     }
@@ -119,6 +128,28 @@ const register=async (req,res)=>{
 
 //Login
 const login=async (req,res)=>{
+    const {email,password,phoneNumber}=req.body;
+    const payLoad={};
 
+    if(!email && !phoneNumber) throw new BadRequestError("Primary details not provided");
+    if(!password) throw new BadRequestError("Password not provided");
+
+    if(!phoneNumber) {
+        payLoad.email=email;
+        userInfo=await UserModel.findOne({email: email});
+    }
+    else {
+        payLoad.phoneNumber=phoneNumber;
+        userInfo=await UserModel.findOne({phoneNumber: phoneNumber});
+    }
+
+    if(!userInfo) throw new BadRequestError("No user with the provided credentials exist");
+
+    const match=await userInfo.verifyPassword(password);
+
+    if(!match) throw new BadRequestError("Your password does not match");
+
+    if(userInfo.verified) res.status(StatusCodes.OK).json({message:"User succesfully logged in"});
 }
+
 module.exports={sendPhoneOtp,validatePhoneOtp,register,login};

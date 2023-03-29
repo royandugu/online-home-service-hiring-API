@@ -2,6 +2,7 @@ require("dotenv").config();
 
 const Mongoose=require("mongoose");
 const {sign}=require("jsonwebtoken");
+const bcrypt=require("bcryptjs");
 
 const UserSchema=new Mongoose.Schema({
     phoneNumber:{
@@ -33,6 +34,10 @@ const UserSchema=new Mongoose.Schema({
 
 UserSchema.methods.generateToken=function(){
     return sign({phoneNumber: this.phoneNumber},process.env.JWT_SECRET);
+}
+
+UserScehma.methods.verifyPassword=async function(password){
+    return await bcrypt.compare(password,this.password);
 }
 
 module.exports=Mongoose.model("User-Model",UserSchema);
