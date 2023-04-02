@@ -33,17 +33,17 @@ const manageRequest =async (req,res)=>{
 }
 
 
-// const getRequest =async (req,res)=>{
-//   const professionalId = req.params.professionalId;
+const getRequest =async (req,res)=>{
+  const professionalId = req.params.professionalId;
 
 
-//   const set = await serivceModel.findById(professionalId)
-//   res.send(set)
+  const set = await serivceModel.findById(professionalId)
+  res.send(set)
 
 
 
  
-// }
+}
 
 //Login
 
