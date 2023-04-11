@@ -138,7 +138,31 @@ const login=async (req,res)=> {
       return res.status(500).json({ message: 'Server error' });
     }
   };
+//update and delete user
+  const updateUser= async(req,res)=>{
+    const userId = req.params.userId
+    const userDetails = req.body
 
-module.exports={sendPhoneOtp,validatePhoneOtp,register,login};
+    try {
+        const resposne  = await UserModel.findByIdAndUpdate(userId,userDetails);
+        return reponse
+    } catch (error) {
+        return error
+    }
 
-//find
+  }
+
+  const deleteUser= async(req,res)=>{
+    const userId = req.params.userId
+    try {
+        const resposne  = await UserModel.findByIdAndDelete(userId);
+        return resposne
+    } catch (error) {
+        return error
+    }
+
+  }
+
+module.exports={sendPhoneOtp,validatePhoneOtp,register,login,updateUser,deleteUser};
+
+

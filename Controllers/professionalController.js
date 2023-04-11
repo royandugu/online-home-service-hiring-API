@@ -12,6 +12,7 @@ const BadRequestError = require("../Error_Handlers/badRequestError");
 const AuthenticationError = require("../Error_Handlers/authenticationError");
 const professionalModel=require("../Models/professionalModel");
 const OtpModel=require("../Models/phoneOtp");
+const { response } = require("express");
 
 const sendPhoneOtp=async (req,res)=>{
     const {phoneNumber} = req.body;
@@ -157,11 +158,34 @@ const login=async (req,res)=> {
       return res.status(500).json({ message: 'Server error' });
     }
   };
+//update and delete professional
+const updateProfessional= async(req,res)=>{
+  const professionalId = req.params.userId
+  const professionalDetails = req.body
 
+  try {
+      const resposne  = await professionalModel.findByIdAndUpdate(professionalId,professionalDetails);
+      return reponse
+  } catch (error) {
+      return error
+  }
+
+}
+
+const deleteProfessional= async(req,res)=>{
+  const userId = req.params.userId
+  try {
+      const resposne  = await professionalModel.findByIdAndDelete(userId);
+      return response
+  } catch (error) {
+      return error
+  }
+
+}
   
 
 
-module.exports={sendPhoneOtp,validatePhoneOtp,register,login, getProfessional};
+module.exports={sendPhoneOtp,validatePhoneOtp,register,login, getProfessional,updateProfessional,deleteProfessional};
 
 //find
 
