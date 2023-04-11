@@ -138,6 +138,7 @@ const login=async (req,res)=> {
       return res.status(500).json({ message: 'Server error' });
     }
   };
+  
 //getAll Professioanl By profession
   const getProfessional=async (req,res)=> {
     const professional = req.params.getProfessional
@@ -165,7 +166,7 @@ const updateProfessional= async(req,res)=>{
 
   try {
       const resposne  = await professionalModel.findByIdAndUpdate(professionalId,professionalDetails);
-      return reponse
+      return response
   } catch (error) {
       return error
   }

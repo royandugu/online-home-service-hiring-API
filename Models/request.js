@@ -24,6 +24,9 @@ const RequestSchema=new Mongoose.Schema({
     price:{
         type:Number,
         required:true,
+    },
+    feedback:{
+        type:String,
     }
     
     
