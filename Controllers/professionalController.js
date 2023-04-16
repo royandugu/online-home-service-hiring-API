@@ -183,10 +183,33 @@ const deleteProfessional= async(req,res)=>{
   }
 
 }
+
+const getAllProfessionals= async(req,res)=>{
+  const professionalId = req.params.userId
+  const professionalDetails = req.body
+
+  try {
+      const resposne  = await professionalModel.find();
+      return resposne
+  } catch (error) {
+      return error
+  }
+
+}
+
+const getServices= async(req,res)=>{ //lejna baki cha 
+  try {
+      const resposne  = await professionalModel.find();
+      return response
+  } catch (error) {
+      return error
+  }
+
+}
   
 
 
-module.exports={sendPhoneOtp,validatePhoneOtp,register,login, getProfessional,updateProfessional,deleteProfessional};
+module.exports={sendPhoneOtp,validatePhoneOtp,register,login, getProfessional,updateProfessional,deleteProfessional,getAllProfessionals};
 
 //find
 

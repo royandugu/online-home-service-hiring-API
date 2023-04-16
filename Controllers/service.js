@@ -66,9 +66,58 @@ const feedbackService =async (req,res)=>{
 
 
 
+
+const getWork =async (req,res)=>{
+  const professionalId = req.params.prfessionalId
+ 
+  try {
+     
+   const set = await serivceModel.find({professionalId: professionalId}).exec()
+   res.send(set)
+  } catch (error) {
+     res.send(error)
+  }
+ }
   
 
+ const getMyServices =async (req,res)=>{
+  const userId = req.params.requestId;
+  
 
-module.exports={postRequest,manageRequest,feedbackService};
+ try {
+    
+  const set = await serivceModel.find({userId:userId});
+  res.send(set)
+ } catch (error) {
+    res.send(error)
+ }
+}
+
+const getAllRequests =async (req,res)=>{
+ 
+  try {
+     
+   const set = await serivceModel.find()
+   res.send(set)
+  } catch (error) {
+     res.send(error)
+  }
+ }
+
+
+
+const deleteService= async(req,res)=>{
+  const userId = req.params.userId
+  try {
+      const resposne  = await serivceModel.findByIdAndDelete(userId)
+      return resposne
+  } catch (error) {
+      return error
+  }
+
+}
+
+
+module.exports={postRequest,manageRequest,feedbackService,getAllRequests,getWork,getMyServices,deleteService};
 
 

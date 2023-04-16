@@ -142,20 +142,18 @@ const login=async (req,res)=> {
   const updateUser= async(req,res)=>{
     const userId = req.params.userId
     const userDetails = req.body
-
     try {
         const resposne  = await UserModel.findByIdAndUpdate(userId,userDetails);
         return reponse
     } catch (error) {
         return error
     }
-
   }
 
   const deleteUser= async(req,res)=>{
-    const userId = req.params.userId
+    const requestId = req.params.requestId
     try {
-        const resposne  = await UserModel.findByIdAndDelete(userId);
+        const resposne  = await UserModel.findByIdAndDelete(requestId);
         return resposne
     } catch (error) {
         return error
@@ -163,6 +161,20 @@ const login=async (req,res)=> {
 
   }
 
-module.exports={sendPhoneOtp,validatePhoneOtp,register,login,updateUser,deleteUser};
+
+  //update and delete user
+  const getAllUsers= async(req,res)=>{
+    const userId = req.params.userId
+    const userDetails = req.body
+
+    try {
+        const resposne  = await UserModel.find();
+        return resposne
+    } catch (error) {
+        return error
+    }
+
+  }
+module.exports={sendPhoneOtp,validatePhoneOtp,register,login,updateUser,deleteUser,getAllUsers};
 
 
