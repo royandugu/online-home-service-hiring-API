@@ -1,5 +1,5 @@
 const router=require("express").Router();
-const {sendPhoneOtp,validatePhoneOtp,register,login,getProfessional, updateProfessional, deleteProfessional}=require("../Controllers/professionalController");
+const {sendPhoneOtp,validatePhoneOtp,register,login,getProfessional, updateProfessional, deleteProfessional,getServices}=require("../Controllers/professionalController");
 router.route("/sendOtp").post(sendPhoneOtp);
 router.route("/validateOtp").post(validatePhoneOtp);
 router.route("/register").post(register);
@@ -7,7 +7,7 @@ router.route("/login").post(login);
 
 
 
-router.route("/getServices").get(login); // 3
+router.route("/getServices").get(getServices); // 3
 
 router.route("/:getProfessional").get(getProfessional); //get professional from here not request.js  4
 

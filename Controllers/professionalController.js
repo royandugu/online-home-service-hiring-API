@@ -145,7 +145,7 @@ const login=async (req,res)=> {
    
     try {
       // Find user in database
-      const professional1 =await professionalModel.findOne({ profession: professional }, '_id').exec();
+      const professional1 =await professionalModel.find({ profession: professional }).exec();
       
   
       if (!professional1) {
@@ -209,7 +209,7 @@ const getServices= async(req,res)=>{ //lejna baki cha
   
 
 
-module.exports={sendPhoneOtp,validatePhoneOtp,register,login, getProfessional,updateProfessional,deleteProfessional,getAllProfessionals};
+module.exports={sendPhoneOtp,validatePhoneOtp,register,login, getProfessional,updateProfessional,deleteProfessional,getAllProfessionals,getServices};
 
 //find
 
