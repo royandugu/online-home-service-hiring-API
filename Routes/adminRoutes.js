@@ -14,9 +14,6 @@ router.route("/getAllUsers").get(updateUser);
 router.route("/update/:userId").patch(updateUser);
 router.route("/delete/:userId").delete(deleteUser);
 
-router.route("/getAllUsers").get(updateUser);  
-router.route("/update/:userId").patch(updateUser);
-router.route("/delete/:userId").delete(deleteUser);
 
 
 router.route("/getAllRequests").get(getAllRequests);

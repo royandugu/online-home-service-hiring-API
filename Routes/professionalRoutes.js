@@ -12,7 +12,7 @@ router.route("/update/:professionalId").patch(updateProfessional);
 router.route("/delete/:professionalId").delete(deleteProfessional);
 
 
-router.route("/getWorks/:professionalId").get(getWork); //get worls assigned to the worker
+router.route("/getWorks/:professionalId").get(getWork); //get works assigned to the worker
 router.route("/manageService/:requestId/:response").patch(manageRequest); //accept or reject 
 
 
