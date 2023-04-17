@@ -1,20 +1,20 @@
 const router=require("express").Router();
-const {sendPhoneOtp,validatePhoneOtp,register,login,getProfessional, updateProfessional, deleteProfessional,getServices}=require("../Controllers/professionalController");
+const {sendPhoneOtp,validatePhoneOtp,registerProfessional,loginProfessional,getProfessional, updateProfessional, deleteProfessional}=require("../Controllers/professionalController");
+const {manageRequest,getWork}=require("../Controllers/service");
+
 router.route("/sendOtp").post(sendPhoneOtp);
 router.route("/validateOtp").post(validatePhoneOtp);
-router.route("/register").post(register);
-router.route("/login").post(login);
+router.route("/register").post(registerProfessional);
+router.route("/login").post(loginProfessional);
 
 
-
-router.route("/getServices").get(getServices); // 3
-
-router.route("/:getProfessional").get(getProfessional); //get professional from here not request.js  4
-
-
-//What admin can do
-
-router.route("/getAllProfessionals").get(updateProfessional);
 router.route("/update/:professionalId").patch(updateProfessional);
 router.route("/delete/:professionalId").delete(deleteProfessional);
+
+
+router.route("/getWorks/:professionalId").get(getWork); //get worls assigned to the worker
+router.route("/manageService/:requestId/:response").patch(manageRequest); //accept or reject 
+
+
+
 module.exports=router;

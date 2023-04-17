@@ -106,7 +106,7 @@ const validatePhoneOtp=async (req,res)=>{
 }
 
 //Register
-const register=async (req,res)=>{
+const registerAdmin=async (req,res)=>{
     const {firstName,lastName,email,password}=req.body;
     if(!firstName || !lastName || !password) throw new BadRequestError("First name or the last name or the password is not avaliable");
     
@@ -141,7 +141,7 @@ const register=async (req,res)=>{
 
 //Login
 
-const login=async (req,res)=> {
+const loginAdmin=async (req,res)=> {
     const { phoneNumber, password } = req.body;
     
   
@@ -161,6 +161,6 @@ const login=async (req,res)=> {
     }
   };
 
-module.exports={sendPhoneOtp,validatePhoneOtp,register,login};
+module.exports={sendPhoneOtp,validatePhoneOtp,registerAdmin,loginAdmin};
 
 //find

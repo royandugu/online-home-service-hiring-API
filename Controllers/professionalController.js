@@ -84,7 +84,7 @@ const validatePhoneOtp=async (req,res)=>{
 }
 
 //Register
-const register=async (req,res)=>{
+const registerProfessional=async (req,res)=>{
     const {firstName,lastName,email,password,profession}=req.body;
     if(!firstName || !lastName || !password) throw new BadRequestError("First name or the last name or the password is not avaliable");
     
@@ -119,7 +119,7 @@ const register=async (req,res)=>{
 
 //Login
 
-const login=async (req,res)=> {
+const loginProfessional=async (req,res)=> {
     const { phoneNumber, password } = req.body;
     
   
@@ -199,7 +199,7 @@ const getAllProfessionals= async(req,res)=>{
 
 const getServices= async(req,res)=>{ //lejna baki cha 
   try {
-      const resposne  = await professionalModel.find();
+      const resposne  = await professionalModel.distinct('profession')
       return response
   } catch (error) {
       return error
@@ -209,7 +209,7 @@ const getServices= async(req,res)=>{ //lejna baki cha
   
 
 
-module.exports={sendPhoneOtp,validatePhoneOtp,register,login, getProfessional,updateProfessional,deleteProfessional,getAllProfessionals,getServices};
+module.exports={sendPhoneOtp,validatePhoneOtp,registerProfessional,loginProfessional, getProfessional,updateProfessional,deleteProfessional,getAllProfessionals,getServices};
 
 //find
 

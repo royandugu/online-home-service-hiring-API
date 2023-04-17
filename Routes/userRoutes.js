@@ -1,15 +1,27 @@
 const router=require("express").Router();
-const {sendPhoneOtp,validatePhoneOtp,register,login,updateUser,deleteUser}=require("../Controllers/userControllers");
-router.route("/sendOtp").post(sendPhoneOtp);
-router.route("/validateOtp").post(validatePhoneOtp);
-router.route("/register").post(register); //1 
-router.route("/login").post(login); //2 
+const {sendPhoneOtp,validatePhoneOtp,updateUser,deleteUser, registerUser, loginUser}=require("../Controllers/userControllers");
+const {feedbackService,getMyServices,postRequest}=require("../Controllers/service");
+const {sendPhoneOtp,validatePhoneOtp,getServices,getProfessional}=require("../Controllers/professionalController");
+router.route("/sendOtp").post(sendPhoneOtp); //send OTP
+router.route("/validateOtp").post(validatePhoneOtp); //validate OTP
+router.route("/register").post(registerUser); //user register
+router.route("/login").post(loginUser); //user login
 
 
 
 
-//What admin can do
-router.route("/getAllUsers").get(updateUser);  
-router.route("/update/:userId").patch(updateUser);
-router.route("/delete/:userId").delete(deleteUser);
+
+
+router.route("/update/:userId").patch(updateUser); //update user info
+router.route("/delete/:userId").delete(deleteUser); //delete user info
+
+
+//new ones
+
+router.route("/getServices").get(getServices); //get all distinct services 
+router.route("/:getProfessional").get(getProfessional); //get professional by service
+router.route("/requestService").post(postRequest); //send service request to professional 
+router.route("/manageFeedback/:requestId").patch(feedbackService);  // send feedback
+router.route("/getMyServices/:userId").get(getMyServices); //get my all services
+
 module.exports=router;
