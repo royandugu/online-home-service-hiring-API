@@ -18,7 +18,7 @@ const ProffesionalSchema=new Mongoose.Schema({
     lastName:{
         type:String,
         required:[true, "Please provide your last name"],
-        match:[/^[A-Z][a-z]{2,}$/,"Please provide a valid last name"]
+        // match:[/^[A-Z][a-z]{2,}$/,"Please provide a valid last name"]
     },
     email:{
         type:String,
