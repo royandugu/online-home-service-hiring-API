@@ -19,7 +19,7 @@ router.route("/delete/:userId").delete(deleteUser); //delete user info
 //new ones
 
 router.route("/getServices").get(getServices); //get all distinct services 
-router.route("/:getProfessional").get(getProfessional); //get professional by service
+router.route("/getProfessional/:getProfessional").get(getProfessional); //get professional by service
 router.route("/requestService").post(postRequest); //send service request to professional 
 router.route("/manageFeedback/:requestId").patch(feedbackService);  // send feedback
 router.route("/getMyServices/:userId").get(getMyServices); //get my all services
