@@ -155,7 +155,7 @@ const loginUser=async (req,res)=> {
     const requestId = req.params.requestId
     try {
         const resposne  = await UserModel.findByIdAndDelete(requestId);
-        return resposne
+        return  res.json(resposne)
     } catch (error) {
         return error
     }
@@ -170,7 +170,7 @@ const loginUser=async (req,res)=> {
 
     try {
         const resposne  = await UserModel.find();
-        return resposne
+        return  res.json(resposne)
     } catch (error) {
         return error
     }
