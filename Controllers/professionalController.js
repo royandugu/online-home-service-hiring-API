@@ -166,7 +166,7 @@ const updateProfessional= async(req,res)=>{
 
   try {
       const resposne  = await professionalModel.findByIdAndUpdate(professionalId,professionalDetails);
-      return response
+      return res.json(response)
   } catch (error) {
       return error
   }
@@ -177,7 +177,7 @@ const deleteProfessional= async(req,res)=>{
   const userId = req.params.userId
   try {
       const resposne  = await professionalModel.findByIdAndDelete(userId);
-      return response
+      return res.json(response);
   } catch (error) {
       return error
   }
@@ -190,7 +190,7 @@ const getAllProfessionals= async(req,res)=>{
 
   try {
       const resposne  = await professionalModel.find();
-      return resposne
+      return res.json(response)
   } catch (error) {
       return error
   }
@@ -200,7 +200,7 @@ const getAllProfessionals= async(req,res)=>{
 const getServices= async(req,res)=>{ //lejna baki cha 
   try {
       const resposne  = await professionalModel.distinct('profession')
-      return response
+      return  res.json(response)
   } catch (error) {
       return error
   }

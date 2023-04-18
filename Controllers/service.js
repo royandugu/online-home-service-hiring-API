@@ -110,7 +110,7 @@ const deleteService= async(req,res)=>{
   const userId = req.params.userId
   try {
       const resposne  = await serivceModel.findByIdAndDelete(userId)
-      return resposne
+      return res.json(response)
   } catch (error) {
       return error
   }
