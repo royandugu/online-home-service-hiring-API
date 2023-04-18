@@ -46,6 +46,7 @@ const sendPhoneOtp=async (req,res)=>{
         const data=await fetch(process.env.SOCI_URL,options);
         const response=await data.json();
         return response;
+         
     }
     
     const response=await sociFetcher();
@@ -72,7 +73,7 @@ const validatePhoneOtp=async (req,res)=>{
 
     const actualOtp=await OtpModel.findOne({phoneNumber:phoneNumber}); //get the OTP from the session
     const isValid=actualOtp.isValid();
-   
+  
 
     if(!isValid) throw new AuthenticationError("The OTP provided has already expired");
 

@@ -7,7 +7,6 @@ const app=express();
 //our dependencies
 const userRoutes=require("./Routes/userRoutes");
 const professionalRoutes= require("./Routes/professionalRoutes")
-const requestRoutes= require("./Routes/request")
 const errorController=require("./Error_Handlers/errorController");
 
 //middlewares
@@ -16,7 +15,7 @@ app.use(errorController);
 app.use(express.urlencoded({ extended: true }))
 app.use("/api/V1/users",userRoutes);
 app.use("/api/V1/professionals",professionalRoutes);
-app.use("/api/V1/requests", requestRoutes);
+
 
 
 //User-defined functions

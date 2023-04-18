@@ -1,7 +1,7 @@
 const router=require("express").Router();
 const {sendPhoneOtp,validatePhoneOtp,updateUser,deleteUser, registerUser, loginUser}=require("../Controllers/userControllers");
 const {feedbackService,getMyServices,postRequest}=require("../Controllers/service");
-const {sendPhoneOtp,validatePhoneOtp,getServices,getProfessional}=require("../Controllers/professionalController");
+const {getServices,getProfessional}=require("../Controllers/professionalController");
 router.route("/sendOtp").post(sendPhoneOtp); //send OTP
 router.route("/validateOtp").post(validatePhoneOtp); //validate OTP
 router.route("/register").post(registerUser); //user register
