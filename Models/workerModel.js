@@ -24,7 +24,27 @@ const workerSchema=new Mongoose.Schema({
         type:String,
         match:[/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/,"Please provide a valid password"],
         required:[true,"Please enter your password"]
+    },
+    reviews:{
+        type:[{id: Mongoose.Types.ObjectId, star: Number, message: String}]
+    },
+    field:{
+        type:String,
+        required:[true,"Field cannot be left empty"]
+    },
+    experience:{
+    },
+    status:{
+
+    },
+    profilePic:{
+
+    },
+    workRegistryNumber:{
+        
     }
+
+
 })
 
 workerSchema.methods.generateToken=function(){

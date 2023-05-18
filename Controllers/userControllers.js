@@ -2,7 +2,6 @@
 require("dotenv").config();
 
 const otpGenerator=require("otp-generator");
-const nodemailer=require("nodemailer");
 const bcrypt=require("bcryptjs");
 
 const {StatusCodes}=require("http-status-codes");
@@ -109,7 +108,6 @@ const validatePhoneOtp=async (req,res)=>{
 //Login
 const login=async (req,res)=>{
     const {password,phoneNumber}=req.body;
-    const payLoad={};
 
     if(!phoneNumber) throw new BadRequestError("Phone number not provided");
     if(!password) throw new BadRequestError("Password not provided");
@@ -121,7 +119,7 @@ const login=async (req,res)=>{
 
     if(!match) throw new BadRequestError("Your password does not match");
 
-    if(userInfo.verified) res.status(StatusCodes.OK).json({message:"User succesfully logged in"});
+    if(userInfo.verified) res.status(StatusCodes.OK).json({message:"User succesfully logged in",loginStatus:true});
 }
 
 
