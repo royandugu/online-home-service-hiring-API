@@ -4,7 +4,7 @@ const Mongoose=require("mongoose");
 const {sign}=require("jsonwebtoken");
 const bcrypt=require("bcryptjs");
 
-const UserSchema=new Mongoose.Schema({
+const workerSchema=new Mongoose.Schema({
     firstName:{
         type:String,
         required:[true, "Please provide your first name"],
@@ -18,16 +18,7 @@ const UserSchema=new Mongoose.Schema({
     phoneNumber:{
         type:Number,
         required:[true, "Please provide your phone number"],
-        match:[/^[0-9]{10}$/],
-        unique:true
-    },
-    address:{
-        type:String,
-        required:[true,"Please provide address"]
-    },
-    profilePic:{
-        type:String,
-        required:[true,"Profile pic is missing"]
+        match:[/^[0-9]{10}$/]
     },
     password:{
         type:String,
@@ -36,12 +27,12 @@ const UserSchema=new Mongoose.Schema({
     }
 })
 
-UserSchema.methods.generateToken=function(){
+workerSchema.methods.generateToken=function(){
     return sign({phoneNumber: this.phoneNumber},process.env.JWT_SECRET);
 }
 
-UserSchema.methods.verifyPassword=async function(password){
+workerScehma.methods.verifyPassword=async function(password){
     return await bcrypt.compare(password,this.password);
 }
 
-module.exports=Mongoose.model("User-Model",UserSchema);
+module.exports=Mongoose.model("User-Model",workerSchema);

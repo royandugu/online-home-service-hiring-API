@@ -4,6 +4,11 @@
 3. `/api/V1/register` <- POST request to register a new user 
 4. `/api/V1/login` <- POST request to login an existing user
 
+## Front end notes 
+1. Make requests to the sendOtp and then validateOtp. After validated then only /register and then login
+
+
+
 ## Note <Registration>
 1. Firstly the phone number is validated through OTP
 2. Then the name and email is entered by the user along with the password
