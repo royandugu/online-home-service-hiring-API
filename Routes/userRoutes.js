@@ -1,7 +1,6 @@
 const router=require("express").Router();
-const {sendPhoneOtp,validatePhoneOtp,register,login}=require("../Controllers/userControllers");
-router.route("/sendOtp").post(sendPhoneOtp);
-router.route("/validateOtp").post(validatePhoneOtp);
+const {register,login}=require("../Controllers/userControllers");
 router.route("/register").post(register);
 router.route("/login").post(login);
 module.exports=router;
+  

@@ -25,34 +25,26 @@ const workerSchema=new Mongoose.Schema({
         match:[/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/,"Please provide a valid password"],
         required:[true,"Please enter your password"]
     },
-    reviews:{
-        type:[{id: Mongoose.Types.ObjectId, star: Number, message: String}]
-    },
     field:{
         type:String,
         required:[true,"Field cannot be left empty"]
     },
-    experience:{
-    },
     status:{
-
+        type:String,
+        enum:["busy","avaliable","idle"],
+        required:[true, "Status is necessary"]
     },
     profilePic:{
-
+        type:String,
+        required:[true , "Profile picture is necessary"],
     },
     workRegistryNumber:{
-        
+        type: Number,
+        required:[true, "Work registry number is a must"],
     }
 
 
 })
 
-workerSchema.methods.generateToken=function(){
-    return sign({phoneNumber: this.phoneNumber},process.env.JWT_SECRET);
-}
-
-workerScehma.methods.verifyPassword=async function(password){
-    return await bcrypt.compare(password,this.password);
-}
 
 module.exports=Mongoose.model("User-Model",workerSchema);
