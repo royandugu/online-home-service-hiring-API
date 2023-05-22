@@ -1,10 +1,12 @@
 const workerModel=require("../Models/WorkerModel/workerModel");
 const {StatusCodes}=require("http-status-codes");
 
+const bcrypt=require("bcryptjs");
+
 const BadRequestError=require("../Error_Handlers/badRequestError");
 
 const registerWorker = async (req,res) => {
-    const {firstName,lastName,phoneNumber,field,address,profilePic,password,workRegistryNumber}=req.body;
+    const {firstName,lastName,phoneNumber,field,address,password,workRegistryNumber}=req.body;
 
     if(!firstName) throw new BadRequestError("First name is not present");
     if(!lastName) throw new BadRequestError("Last name is not present");
@@ -14,8 +16,6 @@ const registerWorker = async (req,res) => {
     if(!field) throw new BadRequestError("Filed must be entered");
     if(!workRegistryNumber) throw new BadRequestError("Work registry number must be entered");
 
-    if(!profilePic) profilePic="urlToDefault";
-
     //Password hashing
     const salt=await bcrypt.genSalt(10);
     const hashedPassword=await bcrypt.hash(password,salt); 
@@ -23,7 +23,7 @@ const registerWorker = async (req,res) => {
     req.body.password=hashedPassword;
 
     const result=await workerModel.create({...req.body});
-    return res.status(StatusCodes.CREATED).json({user:result,message:"User created"});        
+    return res.status(StatusCodes.CREATED).json({expert:result,message:"Expert created"});        
   
 }
 
@@ -36,12 +36,37 @@ const login=async (req,res)=>{
     const workerInfo=await workerModel.findOne({phoneNumber:phoneNumber});
     if(!workerInfo) throw new BadRequestError("No user with the provided credentials exist");
 
-    const match=await userInfo.verifyPassword(password);
+    const match=await workerInfo.verifyPassword(password);
 
     if(!match) throw new BadRequestError("Your password does not match");
 
-    if(workerInfo.verified) res.status(StatusCodes.OK).json({message:"User succesfully logged in",loginStatus:true});
+    res.status(StatusCodes.OK).json({message:"User succesfully logged in",loginStatus:true});
+
+}
+
+const editPersonalDetails=async (req,res)=>{
+    const {id}=req.params;
+    const {firstName,lastName,phoneNumber,field,address,password,workRegistryNumber,profilePic,status}=req.body;
+    const queryObject={};
+
+    if(firstName) queryObject.firstName=firstName;
+    if(lastName) queryObject.lastName=lastName;
+    if(phoneNumber) queryObject.phoneNumber=phoneNumber;
+    if(address) queryObject.address=address;
+    if(profilePic) queryObject.profilePic=profilePic;
+    if(password) queryObject.password=password;
+    if(field) queryObject.field=field;
+    if(status) queryObject.status=status;
+    if(workRegistryNumber) queryObject.workRegistryNumber=workRegistryNumber;
+
+    try{
+        const newDetails=await workerModel.findOneAndUpdate({_id:id},{...queryObject},{new:true,  runValidators:true});
+        res.status(StatusCodes.OK).json({newDetails:newDetails,message:"Update succesfull"});
+    }
+    catch(err){
+        res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({message:err});   
+    }
 }
 
 
-module.exports = {registerWorker,login};
+module.exports = {registerWorker,login,editPersonalDetails};

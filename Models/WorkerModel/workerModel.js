@@ -15,6 +15,10 @@ const workerSchema=new Mongoose.Schema({
         required:[true, "Please provide your last name"],
         match:[/^[A-Z][a-z]{2,}$/,"Please provide a valid last name"]
     },
+    address:{
+        type:String,
+        required:[true,"Worker address is required"]
+    },
     phoneNumber:{
         type:Number,
         required:[true, "Please provide your phone number"],
@@ -32,11 +36,13 @@ const workerSchema=new Mongoose.Schema({
     status:{
         type:String,
         enum:["busy","avaliable","idle"],
-        required:[true, "Status is necessary"]
+        required:[true, "Status is necessary"],
+        default:"avaliable"
     },
     profilePic:{
         type:String,
         required:[true , "Profile picture is necessary"],
+        default:"someUrl"
     },
     workRegistryNumber:{
         type: Number,
@@ -46,5 +52,13 @@ const workerSchema=new Mongoose.Schema({
 
 })
 
+workerSchema.methods.generateToken=function(){
+    return sign({phoneNumber: this.phoneNumber},process.env.JWT_SECRET);
+}
 
-module.exports=Mongoose.model("User-Model",workerSchema);
+workerSchema.methods.verifyPassword=async function(password){
+    return await bcrypt.compare(password,this.password);
+}
+
+
+module.exports=Mongoose.model("Worker-Model",workerSchema);

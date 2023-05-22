@@ -27,7 +27,8 @@ const UserSchema=new Mongoose.Schema({
     },
     profilePic:{
         type:String,
-        required:[true,"Profile pic is missing"]
+        required:[true,"Profile pic is missing"],
+        default:"someURL"
     },
     password:{
         type:String,

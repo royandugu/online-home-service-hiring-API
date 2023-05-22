@@ -12,15 +12,13 @@ const UserModel=require("../Models/userModel");
 
 //Register
 const register=async (req,res)=>{
-    const {firstName,lastName,phoneNumber,address,profilePic,password}=req.body;
+    const {firstName,lastName,phoneNumber,address,password}=req.body;
 
     if(!firstName) throw new BadRequestError("First name is not present");
     if(!lastName) throw new BadRequestError("Last name is not present");
     if(!address) throw new BadRequestError("Address is not present");
     if(!password) throw new BadRequestError("Password is not present");
     if(!phoneNumber) throw new BadRequestError("Phone number is not present");
-
-    if(!profilePic) profilePic="urlToDefault";
 
     //Password hashing
     const salt=await bcrypt.genSalt(10);
@@ -46,8 +44,28 @@ const login=async (req,res)=>{
 
     if(!match) throw new BadRequestError("Your password does not match");
 
-    if(userInfo.verified) res.status(StatusCodes.OK).json({message:"User succesfully logged in",loginStatus:true});
+    res.status(StatusCodes.OK).json({message:"Worker succesfully logged in",loginStatus:true});
 }
 
+const editPersonalDetails=async (req,res)=>{
+    const {id}=req.params;
+    const {firstName,lastName,phoneNumber,address,profilePic,password}=req.body;
+    const queryObject={};
 
-module.exports={register,login};
+    if(firstName) queryObject.firstName=firstName;
+    if(lastName) queryObject.lastName=lastName;
+    if(phoneNumber) queryObject.phoneNumber=phoneNumber;
+    if(address) queryObject.address=address;
+    if(profilePic) queryObject.profilePic=profilePic;
+    if(password) queryObject.password=password;
+
+    try{
+        const newDetails=await UserModel.findOneAndUpdate({_id:id},{...queryObject},{new:true,  runValidators:true});
+        res.status(StatusCodes.OK).json({newDetails:newDetails,message:"Update succesfull"});
+    }
+    catch(err){
+        res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({message:err});   
+    }
+}
+
+module.exports={register,login,editPersonalDetails};

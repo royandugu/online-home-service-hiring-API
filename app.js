@@ -5,14 +5,14 @@ const express=require("express");
 const app=express();
 
 //our dependencies
-//const userRoutes=require("./Routes/userRoutes");
+const userRoutes=require("./Routes/userRoutes");
 const workerRoutes=require("./Routes/workerRoutes");
 const systemRoutes=require("./Routes/systemRoutes");
 const errorController=require("./Error_Handlers/errorController");
 
 //middlewares
 app.use(express.json());
-//app.use("/api/V1/users",userRoutes);
+app.use("/api/V1/users",userRoutes);
 app.use("/api/V1/worker",workerRoutes);
 app.use("/api/V1/system",systemRoutes);
 app.use(errorController);
