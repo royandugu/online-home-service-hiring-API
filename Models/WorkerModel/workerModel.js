@@ -39,16 +39,55 @@ const workerSchema=new Mongoose.Schema({
         required:[true, "Status is necessary"],
         default:"avaliable"
     },
+    onSiteExperience:{
+        startDate:{
+            type:Date
+        },
+        endDate:{
+            type:Date
+        },
+        review:{
+            type:[
+                {
+                    id: Mongoose.Types.ObjectId, 
+                    message: String , 
+                    rating: Number
+                }
+            ]
+        }
+    },
+    offSiteExperience:{
+        companyName:{
+            type:String,
+            required:[true, "Please provide your phone number"],
+            default:"Self-Employeed"    
+        },
+        startDate:{
+            type:Date
+        },
+        endDate:{
+            type:Date
+        },
+        skillsLearned:{
+            type:[String]
+        }
+    },
+    avgReview:{
+        type:Number
+    },
     profilePic:{
         type:String,
         required:[true , "Profile picture is necessary"],
         default:"someUrl"
     },
+    serviceCost:{
+        type:Number,
+        required:[true, "Service cost must be present"]
+    },
     workRegistryNumber:{
         type: Number,
         required:[true, "Work registry number is a must"],
     }
-
 
 })
 
