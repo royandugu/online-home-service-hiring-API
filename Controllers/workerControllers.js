@@ -1,4 +1,4 @@
-const workerModel=require("../Models/WorkerModel/workerModel");
+const workerModel=require("../Models/workerModel");
 const {StatusCodes}=require("http-status-codes");
 
 const bcrypt=require("bcryptjs");
@@ -6,7 +6,7 @@ const bcrypt=require("bcryptjs");
 const BadRequestError=require("../Error_Handlers/badRequestError");
 
 const registerWorker = async (req,res) => {
-    const {firstName,lastName,phoneNumber,field,address,password,workRegistryNumber}=req.body;
+    const {firstName,lastName,phoneNumber,field,address,password,workRegistryNumber,companyName,startDate,endDate,skillsLearned}=req.body;
 
     if(!firstName) throw new BadRequestError("First name is not present");
     if(!lastName) throw new BadRequestError("Last name is not present");
@@ -15,6 +15,18 @@ const registerWorker = async (req,res) => {
     if(!phoneNumber) throw new BadRequestError("Phone number is not present");
     if(!field) throw new BadRequestError("Filed must be entered");
     if(!workRegistryNumber) throw new BadRequestError("Work registry number must be entered");
+    
+    const offSiteExperience={}
+    const onSiteExperience={}
+
+    if(companyName) offSiteExperience.companyName=companyName;
+    if(startDate)   offSiteExperience.startDate=startDate;
+    if(endDate) offSiteExperience.endDate=endDate;
+    if(skillsLearned) offSiteExperience.skillsLearned=skillsLearned;
+    onSiteExperience.startDate=new Date();
+    
+    req.body.offSiteExperience=offSiteExperience;
+    req.body.onSiteExperience=onSiteExperience;
 
     //Password hashing
     const salt=await bcrypt.genSalt(10);

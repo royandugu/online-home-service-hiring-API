@@ -41,7 +41,8 @@ const workerSchema=new Mongoose.Schema({
     },
     onSiteExperience:{
         startDate:{
-            type:Date
+            type:Date,
+            required:[true,"Start date must be present"]
         },
         endDate:{
             type:Date
@@ -59,7 +60,7 @@ const workerSchema=new Mongoose.Schema({
     offSiteExperience:{
         companyName:{
             type:String,
-            required:[true, "Please provide your phone number"],
+            required:[true, "Please provide your company name"],
             default:"Self-Employeed"    
         },
         startDate:{

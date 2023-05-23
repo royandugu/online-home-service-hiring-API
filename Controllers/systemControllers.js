@@ -1,15 +1,42 @@
 const OtpModel = require("../Models/phoneOtp");
-const WorkerModel=require("../Models/WorkerModel/workerModel");
+const WorkerModel=require("../Models/workerModel");
 const BadRequestError = require("../Error_Handlers/badRequestError");
 
 const getWorkers = async (req, res) => {
-    const { address, sort} = req.query;
+    const { address, sort , field, numericFilters} = req.query;
+    //sort = review sort = price
+    
     const queryObject={};
 
     if (address) queryObject.address = address;
     
     const result = WorkerModel.find({...queryObject});
-    if(sort) result.sort("avgReview");
+    
+    if(sort){
+        const sortArray=sort.split(",").join(" ");
+        result.sort(sortArray);
+    }
+    if(field){
+        const fieldArray=field.split(",").join(" ");
+        result.select(fieldArray);
+    }
+    if(numericFilters){
+        const operationMap={
+            ">=":"$gte",
+            "<=":"$lte",
+            ">":"$gt",
+            "<":"$lt",
+            "=":"$eq"
+        }
+        const $regEx=/\b(>=|<=|>|<|=)\b/g;
+        const filters=numericFilters.replace($regEx,(match)=>`-${operationMap[match]}-`);
+        const options=["serviceCost","avgReview"];
+        filters.split(',').forEach((comp)=>{
+            const [field,operator,value] = comp.split('-');
+            if(options.includes(field)) queryObject[field]={[operator]:parseInt([value])};
+            result.find(queryObject);
+        })
+    }
 
     const workers = await result;
     res.status(200).json({ workers:workers});
