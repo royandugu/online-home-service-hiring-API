@@ -35,7 +35,7 @@ const workerSchema=new Mongoose.Schema({
     },
     status:{
         type:String,
-        enum:["busy","avaliable","idle"],
+        enum:["busy","avaliable","idle","dontDisturb"],
         required:[true, "Status is necessary"],
         default:"avaliable"
     },
@@ -72,6 +72,14 @@ const workerSchema=new Mongoose.Schema({
         skillsLearned:{
             type:[String]
         }
+    },
+    notifications:{
+        type:[
+            {
+                id:Mongoose.Types.ObjectId,
+                message:String
+            }
+        ]
     },
     avgReview:{
         type:Number

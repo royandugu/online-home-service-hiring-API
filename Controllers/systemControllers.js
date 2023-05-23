@@ -1,6 +1,7 @@
 const OtpModel = require("../Models/phoneOtp");
 const WorkerModel=require("../Models/workerModel");
 const BadRequestError = require("../Error_Handlers/badRequestError");
+const { StatusCodes } = require("http-status-codes");
 
 const getWorkers = async (req, res) => {
     const { address, sort , field, numericFilters} = req.query;
@@ -9,16 +10,13 @@ const getWorkers = async (req, res) => {
     const queryObject={};
 
     if (address) queryObject.address = address;
-    
+    if (field) queryObject.field=field;
+
     const result = WorkerModel.find({...queryObject});
     
     if(sort){
         const sortArray=sort.split(",").join(" ");
         result.sort(sortArray);
-    }
-    if(field){
-        const fieldArray=field.split(",").join(" ");
-        result.select(fieldArray);
     }
     if(numericFilters){
         const operationMap={
@@ -110,4 +108,21 @@ const validatePhoneOtp = async (req, res) => {
     }
     else throw new AuthenticationError("The provided OTP doesnot match with the one assigned to you");
 }
-module.exports = { sendPhoneOtp, validatePhoneOtp, getWorkers}
+
+const hiringRequestController=async (req,res)=>{
+    const {id}=req.params;
+    const {userId,firstName}=req.body;
+
+    const worker=await WorkerModel.findOne({_id : id});
+
+    if(!worker) throw new BadRequestError("Invalid worker hiring request");
+    if(worker.status === "busy" || worker.status === "dontDisturb") throw new BadRequestError("You cannot hire busy or dontDisturb workers");
+    
+
+    worker.notifications=[...worker.notifications , {id:userId , message:`${firstName} has requested you for service`}]
+    await worker.save();
+
+    res.status(StatusCodes.OK).json({message: "The worker has been notified"});
+}
+
+module.exports = { sendPhoneOtp, validatePhoneOtp, getWorkers, hiringRequestController}
