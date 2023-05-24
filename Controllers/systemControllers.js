@@ -140,4 +140,5 @@ const hireConfirmationController=async (req,res)=>{
     res.status(StatusCodes.CREATED).json({message:"Hire accepted", hireRecord:hireRecord});
 }
 
+
 module.exports = { sendPhoneOtp, validatePhoneOtp, getWorkers, hiringRequestController,hireConfirmationController}
