@@ -125,4 +125,19 @@ const hiringRequestController=async (req,res)=>{
     res.status(StatusCodes.OK).json({message: "The worker has been notified"});
 }
 
-module.exports = { sendPhoneOtp, validatePhoneOtp, getWorkers, hiringRequestController}
+const hireConfirmationController=async (req,res)=>{
+    const HireRecordModel=require("../Models/hiringRecords");
+
+    const {user_id , worker_id , serviceDate}=req.body;
+
+
+    if(!user_id) throw new BadRequestError("User id must be present");
+    if(!worker_id) throw new BadRequestError("Worker id must be present");
+    if(!serviceDate) throw new BadRequestError("Service date must be present");
+
+    const hireRecord=await HireRecordModel.create({...req.body});
+
+    res.status(StatusCodes.CREATED).json({message:"Hire accepted", hireRecord:hireRecord});
+}
+
+module.exports = { sendPhoneOtp, validatePhoneOtp, getWorkers, hiringRequestController,hireConfirmationController}
