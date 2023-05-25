@@ -12,7 +12,7 @@ const systemRoutes=require("./Routes/systemRoutes");
 const errorController=require("./Error_Handlers/errorController");
 
 //middlewares
-app.use(express.json());
+app.use(express.json()); 
 app.use("/api/V1/admin",adminRoutes);
 app.use("/api/V1/users",userRoutes);
 app.use("/api/V1/worker",workerRoutes);

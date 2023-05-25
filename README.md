@@ -1,13 +1,76 @@
-## For front end
-1. `/api/V1/sendOtp` <- POST request to sms the OTP to user's number
-2. `/api/V1/validateOtp` <- POST request to validate the user entered OTP
-3. `/api/V1/register` <- POST request to register a new user 
-4. `/api/V1/login` <- POST request to login an existing user
 
-## Front end notes 
-1. Make requests to the sendOtp and then validateOtp. After validated then only /register and then login
+## ADMIN 
+
+Login : `localhost:5000/api/V1/admin/login` {
+    request : POST 
+    req.body{phoneNumber , password}
+}
+AllChats : `localhost:5000/api/V1/admin/chats` {
+    request : GET
+}
 
 
+## SYSTEM
+SendOtp : `localhost:5000/api/V1/system/sendOtp`{
+    request:POST
+    req.body{phoneNumber}
+}
+ValidateOtp : `localhost:5000/api/V1/system/validateOtp`{
+    request:POST
+    req.body{userEnteredOTP,phoneNumber}
+}
+GetSpecificChat: `localhost:5000/api/V1/system/chat?user_id = & worker_id=`{
+    request:GET
+}
+CreateChat: `localhost:5000/api/V1/system/chat/`{
+    request:POST
+    req.body{user_id , worker_id , sender_id , reciever_id , data}
+}
+
+## USER
+register: `localhost:5000/api/V1/users/register`{
+    request:POST
+    req.body{firstName,lastName,phoneNumber,address,password}
+}
+login: `localhost:5000/api/V1/users/login`{
+    request:POST
+    req.body{phoneNumber,password}
+}
+editDetails: `localhost:5000/api/V1/users/editDetails/:id`{
+    request:POST
+    req.body{details ... }
+}
+hireRequest : `localhost:5000/api/V1/users/hire/:id`{
+    request:POST
+    req.body{user_id,firstName}
+}
+
+## Worker
+GetWorker: `localhost:5000/api/V1/worker/getWorkers`{
+    request:GET
+    queries:{
+        address=add, 
+        sort=review or cost or both, 
+        field=fied,
+        numericFilters=cost>500 
+    }    
+}
+Register: `localhost:5000/api/V1/worker/register`{
+    request:POST
+    req.body{firstName,lastName,phoneNumber,field,address,password,workRegistryNumber,companyName,startDate,endDate,skillsLearned}
+}
+Login: `localhost:5000/api/V1/worker/login`{
+    request:POST
+    req.body{password,phoneNumber}
+}
+EditDetails: `localhost:5000/api/V1/worker/editDetails/:id`{
+    request:POST
+    req.body{...editTerms}
+}
+AcceptHire: `localhost:5000/api/V1/worker/acceptHire`{
+    request:POST
+    req.body{user_id , worker_id , serviceDate}
+}
 
 ## Note <Registration>
 1. Firstly the phone number is validated through OTP

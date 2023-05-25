@@ -5,4 +5,4 @@ const {getAllChat}=require("../Controllers/chatController");
 Router.route("/login").post(loginAdmin);
 Router.route("/chats").get(getAllChat);
 
-module.exports=Router;
+module.exports=Router;  
