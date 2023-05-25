@@ -68,4 +68,11 @@ const editPersonalDetails=async (req,res)=>{
     }
 }
 
-module.exports={register,login,editPersonalDetails};
+const getIndvUser=async(req,res)=>{
+    const {id}=req.params;
+    const indvUser=await UserModel.findOne({_id: id});
+    if(!indvUser) throw new BadRequestError("The user of the given id doesn't exist");
+    res.status(StatusCodes.OK).json({indvUser:indvUser});
+}
+
+module.exports={register,login,editPersonalDetails,getIndvUser};

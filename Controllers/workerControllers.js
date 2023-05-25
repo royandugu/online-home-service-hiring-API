@@ -80,5 +80,12 @@ const editPersonalDetails=async (req,res)=>{
     }
 }
 
+const getIndvWorker=async (req,res)=>{
+    const {id}=req.params;
+    const indvWorker=workerModel.findOne({_id: id});
+    if(!indvWorker) throw new BadRequestError("The worker of give id doesnot exist");
+    res.status(StatusCodes.OK).json({indvWorker:indvWorker});
+}
 
-module.exports = {registerWorker,login,editPersonalDetails};
+
+module.exports = {registerWorker,login,editPersonalDetails,getIndvWorker};

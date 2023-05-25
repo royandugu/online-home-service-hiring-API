@@ -44,6 +44,9 @@ hireRequest : `localhost:5000/api/V1/users/hire/:id`{
     request:POST
     req.body{user_id,firstName}
 }
+individualUser: `localhost:5000/api/V1/users/:id`{
+    request;GET
+}
 
 ## Worker
 GetWorker: `localhost:5000/api/V1/worker/getWorkers`{
@@ -54,6 +57,9 @@ GetWorker: `localhost:5000/api/V1/worker/getWorkers`{
         field=fied,
         numericFilters=cost>500 
     }    
+}
+indvWorker: `localhost:5000/api/V1/worker/:id`{
+    request: GET
 }
 Register: `localhost:5000/api/V1/worker/register`{
     request:POST
