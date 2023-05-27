@@ -46,15 +46,6 @@ const workerSchema=new Mongoose.Schema({
         },
         endDate:{
             type:Date
-        },
-        review:{
-            type:[
-                {
-                    id: Mongoose.Types.ObjectId, 
-                    message: String , 
-                    rating: Number
-                }
-            ]
         }
     },
     offSiteExperience:{
@@ -81,6 +72,15 @@ const workerSchema=new Mongoose.Schema({
             }
         ]
     },
+    review:{
+        type:[
+            {
+                id: Mongoose.Types.ObjectId, 
+                message: String , 
+                rating: Number
+            }
+        ]
+    },
     avgReview:{
         type:Number
     },
@@ -97,7 +97,7 @@ const workerSchema=new Mongoose.Schema({
         type: Number,
         required:[true, "Work registry number is a must"],
     }
-
+ 
 })
 
 workerSchema.methods.generateToken=function(){

@@ -48,7 +48,7 @@ const sendPhoneOtp = async (req, res) => {
     else if (phoneNumber.length != 10) throw new BadRequestError("Invalid phone number provided");
 
     const information = await OtpModel.find({ phoneNumber: phoneNumber });
-
+    const otpGenerator=require("otp-generator");
     const phoneOtp = otpGenerator.generate(6);
 
     //Token
@@ -74,7 +74,6 @@ const sendPhoneOtp = async (req, res) => {
         const response = await data.json();
         return response;
     }
-
     const response = await sociFetcher();
     if (response.message === "Sorry! SMS could not be sent. Invalid mobile number") return res.status(StatusCodes.BAD_REQUEST).json({ message: response.message });
     else if (response.message === "Unauthenticated") return res.status(StatusCodes.UNAUTHORIZED).json({ message: response.message });

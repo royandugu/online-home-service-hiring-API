@@ -75,4 +75,15 @@ const getIndvUser=async(req,res)=>{
     res.status(StatusCodes.OK).json({indvUser:indvUser});
 }
 
+const giveFeedback=async (req,res)=>{
+    const {user_id,worker_id,rating,message}=req.body;
+     
+    
+    const WorkerModel=require("../Models/workerModel");
+    
+    const partWorker=await WorkerModel.findOne({_id:worker_id});
+
+
+}
+
 module.exports={register,login,editPersonalDetails,getIndvUser};
