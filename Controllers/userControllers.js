@@ -75,15 +75,26 @@ const getIndvUser=async(req,res)=>{
     res.status(StatusCodes.OK).json({indvUser:indvUser});
 }
 
-const giveFeedback=async (req,res)=>{
+const postFeedback=async (req,res)=>{
     const {user_id,worker_id,rating,message}=req.body;
-     
+
+    if(!user_id) throw new BadRequestError("User id is not present");
+    if(!worker_id) throw new BadRequestError("Worker id is not present");
+    if(!rating) throw new BadRequestError("Rating is not present");
+    if(!message) throw new BadRequestError("Message is not present");
     
     const WorkerModel=require("../Models/workerModel");
     
     const partWorker=await WorkerModel.findOne({_id:worker_id});
+    if(!partWorker) throw new BadRequestError("The worker doesn't exist");
 
+    const reviewFormat={id:user_id,message:message,rating:rating};
+    partWorker.review=[...partWorker.review,reviewFormat];
+
+    await partWorker.save();    
+
+    res.status(StatusCodes.OK).json({message: "Review added"});
 
 }
 
-module.exports={register,login,editPersonalDetails,getIndvUser};
+module.exports={register,login,editPersonalDetails,getIndvUser,postFeedback};
