@@ -116,7 +116,7 @@ const hiringRequestController=async (req,res)=>{
 
     if(!worker) throw new BadRequestError("Invalid worker hiring request");
     if(worker.status === "busy" || worker.status === "dontDisturb") throw new BadRequestError("You cannot hire busy or dontDisturb workers");
-    
+   
 
     worker.notifications=[...worker.notifications , {id:userId , message:`${firstName} has requested you for service`}]
     await worker.save();

@@ -87,7 +87,7 @@ const workerSchema=new Mongoose.Schema({
     profilePic:{
         type:String,
         required:[true , "Profile picture is necessary"],
-        default:"someUrl"
+        default:"https://avatars.dicebear.com/v2/avataaars/b3321878ad20f0910a21a4fefa7dd7ab.svg"
     },
     serviceCost:{
         type:Number,
