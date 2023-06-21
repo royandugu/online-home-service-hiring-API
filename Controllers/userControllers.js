@@ -12,6 +12,7 @@ const UserModel=require("../Models/userModel");
 
 //Register
 const register=async (req,res)=>{
+    console.log("Register controller called"); 
     const {firstName,lastName,phoneNumber,address,password}=req.body;
 
     if(!firstName) throw new BadRequestError("First name is not present");
@@ -93,7 +94,7 @@ const postFeedback=async (req,res)=>{
 
     await partWorker.save();    
 
-    res.status(StatusCodes.OK).json({message: "Review added"});
+    res.status(StatusCodes.CREATED).json({message: "Review added"});
 
 }
 
