@@ -87,5 +87,24 @@ const getIndvWorker=async (req,res)=>{
     res.status(StatusCodes.OK).json({indvWorker:indvWorker});
 }
 
+const addWorkerReview=async (req,res)=>{
+    const {review,userId,workerId,message}=req.body;
+    const indvWorker=await workerModel.findOne({_id: workerId});
+    if(!indvWorker) throw new BadRequestError("The worker of give id doesnot exist");
+    
+    const reviewObj={
+        id: userId, 
+        message: message , 
+        rating: review
+    }
+    indvWorker.review.push(reviewObj);
+    await indvWorker.save();
+    res.status(StatusCodes.OK).json({indvWorker:indvWorker});    
+}
 
-module.exports = {registerWorker,login,editPersonalDetails,getIndvWorker};
+
+
+
+
+
+module.exports = {registerWorker,login,editPersonalDetails,getIndvWorker,addWorkerReview};
