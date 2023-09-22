@@ -3,7 +3,7 @@ require("dotenv").config();
 
 const express=require("express");
 const app=express();
-const ip="127.0.0.1";
+const cors=require("cors");
 
 //our dependencies
 const adminRoutes=require("./Routes/adminRoutes");
@@ -13,6 +13,7 @@ const systemRoutes=require("./Routes/systemRoutes");
 const errorController=require("./Error_Handlers/errorController");
 
 //middlewares
+app.use(cors());
 app.use(express.json()); 
 app.use("/api/V1/admin",adminRoutes);
 app.use("/api/V1/users",userRoutes); //https://localhost:5000/api/V1/users/register
