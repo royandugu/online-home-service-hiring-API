@@ -1,5 +1,6 @@
 const axios = require('axios');
 const router = require('express').Router();
+const {StatusCodes}=require("http-status-codes");
 
 require('dotenv').config();
 
@@ -33,7 +34,7 @@ router.post('/initiate-payment',
             console.log("working")
             if (initiateResponse.data.pidx) {
                 //  return res.redirect(initiateResponse.data.payment_url)
-                return res.json(initiateResponse.data.payment_url);
+                return res.status(StatusCodes.OK).json(initiateResponse.data.payment_url);
             } else {
                 res.json({ message: 'Payment initiation failed' });
             }
