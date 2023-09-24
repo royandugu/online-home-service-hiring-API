@@ -11,6 +11,8 @@ const userRoutes=require("./Routes/userRoutes");
 const workerRoutes=require("./Routes/workerRoutes");
 const systemRoutes=require("./Routes/systemRoutes");
 const khaltiRoute=require("./Routes/Khalti/khalti");
+const hireRoute=require("./Routes/hireRoutes"); 
+
 const errorController=require("./Error_Handlers/errorController");
 
 //middlewares
@@ -21,6 +23,7 @@ app.use("/api/V1/users",userRoutes); //https://localhost:5000/api/V1/users/regis
 app.use("/api/V1/worker",workerRoutes);
 app.use("/api/V1/system",systemRoutes);
 app.use("/api/V1/payment",khaltiRoute); // api/V1/payment/initiate-payment
+app.use("/api/V1/hire",hireRoute);
 
 app.use(errorController);
 
