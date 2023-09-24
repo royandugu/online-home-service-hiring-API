@@ -5,6 +5,8 @@ const app=express();
 const http=require("http");
 const {Server}=require("socket.io");
 
+const {createChat}=require("./Controllers/createChat");
+
 const cors=require("cors");
 app.use(cors());
 
@@ -25,7 +27,7 @@ io.on("connection",(socket)=>{
         const listenSendMessage = async () => {
             try {
                 await connectDb();
-                //const chat=await createChat(data);
+                const chat=await createChat(data);
                 socket.emit("message_saved",chat); 
             }
             catch (err) {

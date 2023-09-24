@@ -25,11 +25,6 @@ const UserSchema=new Mongoose.Schema({
         type:String,
         required:[true,"Please provide address"]
     },
-    profilePic:{
-        type:String,
-        required:[true,"Profile pic is missing"],
-        default:"someURL"
-    },
     password:{
         type:String,
         match:[/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/,"Please provide a valid password"],

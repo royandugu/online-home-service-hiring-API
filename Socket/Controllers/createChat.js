@@ -1,5 +1,5 @@
-const ChatModel=require("../../API/Models/SystemModels/ChatModel/chatModel");
-const BadRequestError = require("../../API/Error_Handlers/badRequestError");
+const ChatModel=require("../../Models/chatModel");
+const BadRequestError = require("../../Error_Handlers/badRequestError");
 
 const createChat=async (details)=>{
     const {adminId , organizerId , sender_id , reciever_id , data}=details;
