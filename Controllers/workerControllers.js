@@ -109,9 +109,21 @@ const addWorkerReview=async (req,res)=>{
     res.status(StatusCodes.OK).json({indvWorker:indvWorker});    
 }
 
+const getSearchWorker=async (req,res)=>{
+    const {searchPattern}=req.query;
+    const searchField="firstName";
+    const queryObject = {};
+
+    if (searchPattern) {
+        const regexPattern = new RegExp(searchPattern, 'i'); // 'i' for case-insensitive search
+        queryObject[searchField] = {
+            $regex: regexPattern,
+        };
+    }
+
+    const workers=await workerModel.find(queryObject);
+    res.status(StatusCodes.OK).json({workers:workers});  
+}
 
 
-
-
-
-module.exports = {registerWorker,login,editPersonalDetails,getIndvWorker,addWorkerReview,getWorkerCategory};
+module.exports = {registerWorker,login,editPersonalDetails,getIndvWorker,addWorkerReview,getWorkerCategory,getSearchWorker};

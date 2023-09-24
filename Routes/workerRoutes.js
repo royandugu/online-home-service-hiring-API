@@ -1,9 +1,10 @@
 const router=require("express").Router();
-const {registerWorker,login,editPersonalDetails,getIndvWorker,addWorkerReview,getWorkerCategory}=require("../Controllers/workerControllers");
+const {registerWorker,login,editPersonalDetails,getIndvWorker, getSearchWorker,addWorkerReview,getWorkerCategory}=require("../Controllers/workerControllers");
 const {getWorkers,hireConfirmationController}=require("../Controllers/systemControllers");
 
 router.route("/").get(getWorkers);
 router.route("/category").get(getWorkerCategory);
+router.route("/search").get(getSearchWorker);
 router.route("/:id").get(getIndvWorker); 
 router.route("/register").post(registerWorker);
 router.route("/login").post(login); 
