@@ -3,7 +3,7 @@ const {registerWorker,login,editPersonalDetails,getIndvWorker, getSearchWorker,a
 const {getWorkers,hireConfirmationController}=require("../Controllers/systemControllers");
 
 router.route("/").get(getWorkers);
-router.route("/category").get(getWorkerCategory);
+router.route("/category").get(getWorkerCategory); ///category
 router.route("/search").get(getSearchWorker);
 router.route("/:id").get(getIndvWorker); 
 router.route("/register").post(registerWorker);

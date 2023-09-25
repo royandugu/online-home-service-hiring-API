@@ -4,7 +4,7 @@ const BadRequestError = require("../Error_Handlers/badRequestError");
 const { StatusCodes } = require("http-status-codes");
 
 const getWorkers = async (req, res) => {
-    const { address, sort , field, numericFilters} = req.query;
+    const { address, sort , field, numericFilters} = req.query; 
     //sort = review sort = price
     
     const queryObject={};

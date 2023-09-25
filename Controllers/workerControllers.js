@@ -91,7 +91,7 @@ const getWorkerCategory=async (req,res)=>{
     const {category}=req.query;
     const workers=await workerModel.find({field: category});
     if(!workers) throw new BadRequestError("The worker of give id doesnot exist");
-    res.status(StatusCodes.OK).json({workders:workers});
+    res.status(StatusCodes.OK).json({workers:workers});
 }
 
 const addWorkerReview=async (req,res)=>{
