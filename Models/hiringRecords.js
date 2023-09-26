@@ -12,6 +12,20 @@ const hiringRecordSchema=new Mongoose.Schema({
     serviceDate:{
         type:Date,
         required:[true , "Service date must be present"]
+    },
+    completed:{
+        type:Boolean,
+        required:[true, "Completed must be present"],
+        deafult:false
+    },
+    settled:{
+        type:Boolean,
+        required:[true, "Settled must be present"],
+        deafult:false
+    },
+    serviceCost:{
+        type:Number,
+        required:[true, "Service const must be present"]
     }
 },{timestamps:true})
 

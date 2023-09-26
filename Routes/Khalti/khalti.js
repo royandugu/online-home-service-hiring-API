@@ -15,25 +15,14 @@ router.post('/initiate-payment',
     // clientauthentication,
     async (req, res) => {
         try {
-
             const initiatePayload = req.body;
-            /* 
-                {
-                    returnUrl,
-                    websiteUrl: Hamro webste,
-                    amount,
-                    product_details
-                }
-            */
             const initiateResponse = await axios.post(initiateUrl, initiatePayload, {
                 headers: {
                     'Content-Type': 'application/json',
                     Authorization: `Key ${authorizationKey}`
                 }
             });
-            console.log("working")
             if (initiateResponse.data.pidx) {
-                //  return res.redirect(initiateResponse.data.payment_url)
                 return res.status(StatusCodes.OK).json(initiateResponse.data.payment_url);
             } else {
                 res.json({ message: 'Payment initiation failed' });

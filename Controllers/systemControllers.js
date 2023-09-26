@@ -1,5 +1,6 @@
 const OtpModel = require("../Models/phoneOtp");
 const WorkerModel=require("../Models/workerModel");
+const UserModel=require("../Models/userModel");
 const BadRequestError = require("../Error_Handlers/badRequestError");
 const { StatusCodes } = require("http-status-codes");
 
@@ -39,6 +40,21 @@ const getWorkers = async (req, res) => {
     const workers = await result;
     res.status(200).json({ workers:workers});
     
+}
+
+const getUsers=async (req,res)=>{
+    const users=await UserModel.find({});
+    res.status(200).json({users:users});
+}
+
+const getTotalWorkers=async (req,res)=>{
+    const totalWorkers=await WorkerModel.find({}).countDocuments();
+    res.status(200).json({totalWorkers:totalWorkers});
+}
+
+const getTotalUsers=async (req,res)=>{
+    const totalUsers=await UserModel.find({}).countDocuments();
+    res.status(200).json({totalUsers:totalUsers});
 }
 
 const sendPhoneOtp = async (req, res) => {
@@ -139,8 +155,4 @@ const hireConfirmationController=async (req,res)=>{
     res.status(StatusCodes.CREATED).json({message:"Hire accepted", hireRecord:hireRecord});
 }
 
-const searchDetails=()=>{
-    
-}
-
-module.exports = { sendPhoneOtp, validatePhoneOtp, getWorkers, hiringRequestController,hireConfirmationController}
+module.exports = { sendPhoneOtp, validatePhoneOtp, getWorkers, hiringRequestController,hireConfirmationController,getTotalWorkers,getTotalUsers,getUsers}
