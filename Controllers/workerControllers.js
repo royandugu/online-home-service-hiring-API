@@ -125,5 +125,11 @@ const getSearchWorker = async (req, res) => {
     res.status(StatusCodes.OK).json({ workers: workers });
 }
 
+const getWorkerByEmail=async (req,res)=>{
+    const { phone } = req.params;
+    const indvWorker =await workerModel.findOne({ phoneNumber: phone });
+    if (!indvWorker) throw new BadRequestError("The worker of given email doesnot exist");
+    res.status(StatusCodes.OK).json({ indvWorker: indvWorker });
+}
 
-module.exports = { registerWorker, login, editPersonalDetails, getIndvWorker, addWorkerReview, getWorkerCategory, getSearchWorker };
+module.exports = { registerWorker, login, editPersonalDetails, getIndvWorker, addWorkerReview, getWorkerCategory, getSearchWorker, getWorkerByEmail};
