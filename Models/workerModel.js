@@ -31,6 +31,7 @@ const workerSchema=new Mongoose.Schema({
     },
     field:{
         type:String,
+        enum:["plumber","cleaner","parlour","electrician","painter","mechanic",],
         required:[true,"Field cannot be left empty"]
     },
     status:{
