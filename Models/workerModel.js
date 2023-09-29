@@ -13,7 +13,6 @@ const workerSchema=new Mongoose.Schema({
     lastName:{
         type:String,
         required:[true, "Please provide your last name"],
-        match:[/^[A-Z][a-z]{2,}$/,"Please provide a valid last name"]
     },
     address:{
         type:String,
@@ -33,70 +32,6 @@ const workerSchema=new Mongoose.Schema({
         type:String,
         enum:["plumber","cleaner","parlour","electrician","painter","mechanic",],
         required:[true,"Field cannot be left empty"]
-    },
-    status:{
-        type:String,
-        enum:["busy","avaliable","idle","dontDisturb"],
-        required:[true, "Status is necessary"],
-        default:"avaliable"
-    },
-    onSiteExperience:{
-        startDate:{
-            type:Date,
-            required:[true,"Start date must be present"]
-        },
-        endDate:{
-            type:Date
-        }
-    },
-    offSiteExperience:{
-        companyName:{
-            type:String,
-            required:[true, "Please provide your company name"],
-            default:"Self-Employeed"    
-        },
-        startDate:{
-            type:Date
-        },
-        endDate:{
-            type:Date
-        },
-        skillsLearned:{
-            type:[String]
-        }
-    },
-    notifications:{
-        type:[
-            {
-                id:Mongoose.Types.ObjectId,
-                message:String
-            }
-        ]
-    },
-    review:{
-        type:[
-            {
-                id: Mongoose.Types.ObjectId, 
-                message: String , 
-                rating: Number
-            }
-        ]
-    },
-    avgReview:{
-        type:Number
-    },
-    profilePic:{
-        type:String,
-        required:[true , "Profile picture is necessary"],
-        default:"https://avatars.dicebear.com/v2/avataaars/b3321878ad20f0910a21a4fefa7dd7ab.svg"
-    },
-    serviceCost:{
-        type:Number,
-        required:[true, "Service cost must be present"]
-    },
-    workRegistryNumber:{
-        type: Number,
-        required:[true, "Work registry number is a must"],
     }
  
 })

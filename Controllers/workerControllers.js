@@ -14,19 +14,6 @@ const registerWorker = async (req, res) => {
     if (!password) throw new BadRequestError("Password is not present");
     if (!phoneNumber) throw new BadRequestError("Phone number is not present");
     if (!field) throw new BadRequestError("Filed must be entered");
-    if (!workRegistryNumber) throw new BadRequestError("Work registry number must be entered");
-
-    const offSiteExperience = {}
-    const onSiteExperience = {}
-
-    if (companyName) offSiteExperience.companyName = companyName;
-    if (startDate) offSiteExperience.startDate = startDate;
-    if (endDate) offSiteExperience.endDate = endDate;
-    if (skillsLearned) offSiteExperience.skillsLearned = skillsLearned;
-    onSiteExperience.startDate = new Date();
-
-    req.body.offSiteExperience = offSiteExperience;
-    req.body.onSiteExperience = onSiteExperience;
 
     //Password hashing
     const salt = await bcrypt.genSalt(10);
