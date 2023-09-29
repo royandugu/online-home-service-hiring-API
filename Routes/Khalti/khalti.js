@@ -11,7 +11,7 @@ const Khalti_key = process.env.KhaltiAuth_KEY;
 const authorizationKey = Khalti_key; // Replace with your actual authorization key
 
 
-router.post('/initiate-payment',
+router.post('/initiate-payment', 
     // clientauthentication,
     async (req, res) => {
         try {

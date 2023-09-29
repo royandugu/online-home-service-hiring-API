@@ -103,6 +103,55 @@ const sendPhoneOtp = async (req, res) => {
     else return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ message: "Unknown error occured while posting data to SOCI AIR API" })
 }
 
+const sendPhoneMessage = async (req, res) => {
+    const { userPhoneNumber, workerPhoneNumber, hireStatus } = req.body;
+
+    
+    //Token
+    const apiToken = "Bearer " + process.env.API_TOKEN;
+    let message;
+    let phone;
+    if(hireStatus) {
+        message=`${userPhoneNumber} asked to hire you`;
+        phone=workerPhoneNumber;
+    }
+    else {
+        message=`${workerPhoneNumber} has accepted to work for you`; 
+        phone=userPhoneNumber;
+    }
+    //options setup
+    const options = {
+        method: 'POST',
+        headers: {
+            "Authorization": apiToken,
+            "Content-Type": "application/json",
+            "Accept": "application/json"
+        },
+        body: JSON.stringify({
+            "message": message,
+            "mobile": phone
+        })
+    }
+
+    //Senting the request to sociair API
+    const sociFetcher = async () => {
+        const data = await fetch(process.env.SOCI_URL, options);
+        const response = await data.json();
+        return response;
+    }
+    const response = await sociFetcher();
+    if (response.message === "Sorry! SMS could not be sent. Invalid mobile number") return res.status(StatusCodes.BAD_REQUEST).json({ message: response.message });
+    else if (response.message === "Unauthenticated") return res.status(StatusCodes.UNAUTHORIZED).json({ message: response.message });
+    else if (response.message === "Success! SMS has been sent") {
+        if (information.length === 0) await OtpModel.create({ otp: phoneOtp, phoneNumber: phoneNumber });
+        else {
+            await OtpModel.findOneAndUpdate({ phoneNumber: phoneNumber }, { otp: phoneOtp }, { new: true, runValidators: true });
+        }
+        res.status(StatusCodes.OK).json({ message: response.message, phoneNumber: phoneNumber })
+    }
+    else return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ message: "Unknown error occured while posting data to SOCI AIR API" })
+}
+
 const validatePhoneOtp = async (req, res) => {
     const { userOtp, phoneNumber } = req.body;
 
@@ -155,4 +204,4 @@ const hireConfirmationController=async (req,res)=>{
     res.status(StatusCodes.CREATED).json({message:"Hire accepted", hireRecord:hireRecord});
 }
 
-module.exports = { sendPhoneOtp, validatePhoneOtp, getWorkers, hiringRequestController,hireConfirmationController,getTotalWorkers,getTotalUsers,getUsers}
+module.exports = { sendPhoneOtp, validatePhoneOtp, getWorkers, hiringRequestController,hireConfirmationController,getTotalWorkers,getTotalUsers,getUsers,sendPhoneMessage}

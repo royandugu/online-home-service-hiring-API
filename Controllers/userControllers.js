@@ -33,7 +33,10 @@ const register=async (req,res)=>{
 }
  
 const login=async (req,res)=>{
+    console.log("User login called");
     const {password,phoneNumber}=req.body;
+    console.log(password);
+    console.log(phoneNumber);
 
     if(!phoneNumber) throw new BadRequestError("Phone number not provided");
     if(!password) throw new BadRequestError("Password not provided");

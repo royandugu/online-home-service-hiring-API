@@ -39,7 +39,7 @@ const registerWorker = async (req, res) => {
 
 }
 
-const login = async (req, res) => {
+const login = async (req, res) => { 
     const { password, phoneNumber } = req.body;
 
     if (!phoneNumber) throw new BadRequestError("Phone number not provided");
@@ -86,6 +86,13 @@ const getIndvWorker = async (req, res) => {
     if (!indvWorker) throw new BadRequestError("The worker of give id doesnot exist");
     res.status(StatusCodes.OK).json({ indvWorker: indvWorker });
 }
+const getIndvWorkerByContact = async (req, res) => {
+    const { phoneNumber } = req.params;
+    const indvWorker =await workerModel.findOne({ phoneNumber: phoneNumber });
+    if (!indvWorker) throw new BadRequestError("The worker of give id doesnot exist");
+    res.status(StatusCodes.OK).json({ indvWorker: indvWorker });
+}
+
 
 const getWorkerCategory = async (req, res) => {
     const { category } = req.query;
@@ -121,9 +128,27 @@ const getSearchWorker = async (req, res) => {
         };
     }
 
-    const workers = await workerModel.find(queryObject);
+    const workers = await workerModel.find(queryObject); 
     res.status(StatusCodes.OK).json({ workers: workers });
 }
 
+const getWorkerRequests=async (req,res)=>{
+    console.log("getWorkerrequests");
 
-module.exports = { registerWorker, login, editPersonalDetails, getIndvWorker, addWorkerReview, getWorkerCategory, getSearchWorker };
+    const HiringRecords=require("../Models/hiringRecords");
+    const {workerId}=req.params;
+
+    const workerDetails=await workerModel.findOne({phoneNumber:workerId});
+
+    console.log(workerDetails);
+    console.log(workerDetails._id);
+
+    const allWorkerHires=await HiringRecords.find({worker_id: workerDetails._id}).countDocuments();
+    console.log(allWorkerHires);
+    const completedWorkerHires=await HiringRecords.find({worker_id: workerDetails._id, completed:true}).countDocuments();
+    
+    res.status(200).json({allWorkerHires:allWorkerHires, completedWorkerHires:completedWorkerHires?completedWorkerHires:0});
+}
+ 
+
+module.exports = { registerWorker, login, editPersonalDetails, getIndvWorker, addWorkerReview, getWorkerCategory, getSearchWorker,getWorkerRequests,getIndvWorkerByContact};
